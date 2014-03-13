@@ -47,15 +47,4 @@ function query_login($user, $pass){
 	oci_close($conn);
 	return $ret;
 }
-function query_register($user, $pass){
-	$conn=connect();
-	$sql = 'SELECT COUNT(*) count FROM users u WHERE u.user_name=\''.$user.'\' AND u.password=\''.$pass.'\'';
-	INSERT INTO users VALUES ($user, $pass, NULL, )
-
-	if(($statement = oci_parse($conn, $sql)) == FALSE){
-		$err = oci_error($statement);
-		echo htmlentities($err['message']);
-	}
-
-}
 ?>
