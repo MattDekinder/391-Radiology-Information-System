@@ -3,12 +3,6 @@
 	background-color:#b0c4de;
 	border-style:solid;
 	border-width:1px;
-	display: table-cell; 
-	vertical-align:middle;
-}
-
-.wrapper {
-	display:table;
 }
 
 h1.header {
