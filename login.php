@@ -31,14 +31,14 @@ if($login = isset($_POST['login'])){
 <http>
 	<head>
 		<title>Login</title>
-		<LINK rel="stylesheet" type="text/css" href="login.css">
+		<LINK rel="stylesheet" type="text/css" href="style.css">
 		</head>
 		<body>
 			<div class="user_login">
 				<h1 class="header">Login</h1>
 				<form name="user_login" method="post" action="login.php">
-					Username : <input type="text" name="uname"> <br> 
-					Password : <input type="text" name="upass"> <br>
+					<input type="text" name="uname" placeholder="Username"> <br> 
+					<input type="text" name="upass" placeholder="Password"> <br>
 					<input type="submit" name="login" value="Login">
 				</form>
 				<form method="post" action="change.php">
