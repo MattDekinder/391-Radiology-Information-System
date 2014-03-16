@@ -1,5 +1,6 @@
 <?php 
 include('database.php');
+$change = isset($_POST['change']);
 if($login = isset($_POST['login'])){ 
 
 	$result = query_login($_POST['uname'], $_POST['upass']);
@@ -25,8 +26,7 @@ if($login = isset($_POST['login'])){
 		////////////////////////////////////////////////NEXT PAGE////////////////////////////////////////////////
 		////////////////////////////////////////////////NEXT PAGE////////////////////////////////////////////////
 	}
-} elseif(isset($_POST['change'])) {
-}
+} 
 ?>
 <http>
 	<head>
@@ -40,8 +40,6 @@ if($login = isset($_POST['login'])){
 					Username : <input type="text" name="uname"> <br> 
 					Password : <input type="text" name="upass"> <br>
 					<input type="submit" name="login" value="Login">
-				</form>
-				<form method="post" action="change.php">
 					<input type="submit" name="change" value="Change Password">
 				</form>
 				<?php if($login){ ?>

@@ -41,8 +41,8 @@ if($login = isset($_POST['login'])){
 					Password : <input type="text" name="upass"> <br>
 					<input type="submit" name="login" value="Login">
 				</form>
-				<form method="post" action="change.php">
-					<input type="submit" name="change" value="Change Password">
+				<form method="link" action="change.php">
+					<input type="submit" name="change" value="">
 				</form>
 				<?php if($login){ ?>
 				<h2>Login Failed!</h2>
