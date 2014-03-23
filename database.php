@@ -108,4 +108,124 @@ function query_password_change($user, $oldpass, $newpass){
 	} 
 }
 
+function get_patients(){
+	$conn = connect();
+	$sql = "select u.person_id, first_name, last_name from persons p join users u on p.person_id=u.person_id where u.CLASS='p'";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($stid);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($stid);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$count = 0;
+
+	while($row = oci_fetch_assoc($statement)){
+		$ret[$count] = $row;
+		$count = $count + 1; 
+	}
+	oci_free_statement($statement);
+	oci_close($conn);
+	return $ret;
+}
+
+function get_doctors(){
+	$conn = connect();
+	$sql = "select u.person_id, first_name, last_name from persons p join users u on p.person_id=u.person_id where u.CLASS='d'";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($stid);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($stid);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$count = 0;
+
+	while($row = oci_fetch_assoc($statement)){
+		$ret[$count] = $row;
+		$count = $count + 1; 
+	}
+	oci_free_statement($statement);
+	oci_close($conn);
+	return $ret;
+}
+
+function get_radiolog(){
+	$conn = connect();
+	$sql = "select u.person_id, first_name, last_name from persons p join users u on p.person_id=u.person_id where u.CLASS='r'";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($stid);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($stid);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$count = 0;
+
+	while($row = oci_fetch_assoc($statement)){
+		$ret[$count] = $row;
+		$count = $count + 1; 
+	}
+	oci_free_statement($statement);
+	oci_close($conn);
+	return $ret;
+}
+
+function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $diag, $desc){
+	$conn = connect();
+	$sql = "insert into radiology_record values (".(string)$id.", ".(string)$patient.", ".(string)$doctor.", ".(string)$rad.", '".(string)$type."', TO_DATE('".(string)$p_date."', 'YYYY-MM-DD'), TO_DATE('".(string)$t_date."', 'YYYY-MM-DD'), '".(string)$diag."', '".(string)$desc."')";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($stid);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($stid);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	oci_free_statement($statement);
+	oci_close($conn);
+}
 ?>
