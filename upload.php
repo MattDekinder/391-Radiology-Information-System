@@ -1,5 +1,6 @@
 <?php
 include('database.php'); 
+session_start();
 $patients = get_patients();
 $doctors = get_doctors();
 $rads = get_radiolog();

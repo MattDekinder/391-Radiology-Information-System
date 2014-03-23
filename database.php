@@ -1,7 +1,7 @@
 <?php
 function connect(){
 
-	//Connects to my Orricle username
+	//Connects to my Oracle username
 	$connection = oci_connect('esinglet', 'qwertyuiop1');
 	if (!$connection) {
 
@@ -227,5 +227,36 @@ function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $dia
 
 	oci_free_statement($statement);
 	oci_close($conn);
+}
+
+function rows_g(){
+	$conn = connect();
+	$sql = "select count(*) as C from radiology_record";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($stid);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($stid);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$row = oci_fetch_assoc($statement);
+	
+	$ret = $row['C'];
+
+	oci_free_statement($statement);
+	oci_close($conn);
+
+	return $ret;
 }
 ?>

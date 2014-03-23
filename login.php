@@ -24,7 +24,7 @@ if($login = isset($_POST['login'])){
 			$_SESSION['EMAIL'] = $result['info']['EMAIL'];
 			$_SESSION['PHONE'] = $result['info']['PHONE'];
 
-			header("Location: http://consort.cs.ualberta.ca/~dekinder/391-Radiology-Information-System/search.php");
+			header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/search.php");
 		}
 	}
 //The user clicked the 'change password' button

@@ -1,6 +1,5 @@
 <?php
 include('database.php');
-$status=TRUE;
 if(isset($_GET['uname'])){
 	$username = $_GET['uname'];
 } elseif(isset($_POST['change_go'])){
@@ -26,7 +25,7 @@ if(isset($_GET['uname'])){
 				<input type="submit" name="change_go" value="Change Password" >
 			</form>
 			<?php if(!$status){ 
-			echo "<h2>Password Change Failed!</h2>";
+			echo "<h2>Password Change Failed!</h2>
 			 } ?>
 		</div>
 	</body>
