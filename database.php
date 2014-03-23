@@ -228,6 +228,4 @@ function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $dia
 	oci_free_statement($statement);
 	oci_close($conn);
 }
-
-
 ?>
