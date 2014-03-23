@@ -1,8 +1,8 @@
 <?php
-include('database.php'); 
-$patients = get_patients();
-$doctors = get_doctors();
-$rads = get_radiolog();
+//include('database.php'); 
+//$patients = get_patients();
+//$doctors = get_doctors();
+//$rads = get_radiolog();
 ?>
 
 <html>
