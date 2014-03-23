@@ -29,7 +29,7 @@ if($login = isset($_POST['login'])){
 	}
 //The user clicked the 'change password' button
 } elseif(isset($_POST['change'])) {
-	header("Location: http://consort.cs.ualberta.ca/~dekinder/391-Radiology-Information-System/change.php?uname=".$_POST['uname']);
+	header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/change.php?uname=".$_POST['uname']);
 }
 ?>
 <http>
