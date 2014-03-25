@@ -12,3 +12,18 @@ h1.header {
 form {
 	display: inline;
 }
+
+#topbar {
+	border-style:solid;
+	border-width:1px;
+	background-color:#b0c4de;
+	font-size: 3em;
+}
+
+#uname {
+	float: right;
+}
+
+#space {
+	height: 8px;
+}

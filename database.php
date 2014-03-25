@@ -229,7 +229,7 @@ function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $dia
 	oci_close($conn);
 }
 
-function rows_g(){
+function rows_count(){
 	$conn = connect();
 	$sql = "select count(*) as C from radiology_record";
 
