@@ -14,20 +14,38 @@ if(isset($_POST['create'])){
 
 }
 
-/*else*/if(true){
+/*else*/if($_POST['upload']){
 
-	// foreach ($_FILES['file'] as $key => $value) {
-	// 	echo $key." ".$value.": <br>";
-	// 	foreach ($value as $k => $v) {
-	// 		echo $k." ".$v."<br>";
-	// 	}
-	// }
+	foreach ($_FILES['file'] as $key => $value) {
+		echo $key." ".$value.": <br>";
+		foreach ($value as $k => $v) {
+			echo $k." ".$v."<br>";
+		}
+	}
 
 	if($_FILES['file']['error'][0] > 0){
 		echo "Error: ".$_FILES["file"]["error"][0]."<br>";
 	} else{
 		$file = $_FILES['file'];
 
+		if(!$source_image = imagecreatefromjpeg($file['tmp_name'][0])){
+			echo "failed";
+		}
+		$width = imagesx($source_image);
+		$height = imagesy($source_image);
+
+		$desired_width = 200;
+
+		$desired_height = floor($height * ($desired_width / $width));
+
+		$virtual_image = imagecreatetruecolor($desired_width, $desired_height);
+
+		imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
+
+		imagejpeg($virtual_image);
+
+
+		add_image($file, $rid);
 	}
 }
 

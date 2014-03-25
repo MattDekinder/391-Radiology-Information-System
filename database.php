@@ -259,4 +259,23 @@ function rows_count($table){
 
 	return $ret;
 }
+
+function add_image($file, $rid){
+
+	//Image id for the new image
+	$iid = rows_count('pacs_images');
+
+	$conn = connect();
+	$sql = "insert into pacs_images (record_id, image_id, thumbnail, regular_size, full_size) VALUES(0, 0, empty_blob(), empty_blob(), empty_blob()) RETURNING thumbnail INTO :tn and regular_size into :rs and full_size into :fs";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($stid);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	
+
+}
 ?>
