@@ -48,7 +48,5 @@ if(isset($_POST['search'])){
       <input type="submit" name="search" value="Search"><br></p>
     </form>
   </div>
-
-  <p>&gt;</p>
 </body>
 </html>

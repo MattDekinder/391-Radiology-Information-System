@@ -16,38 +16,32 @@ if(isset($_POST['create'])){
 
 /*else*/if($_POST['upload']){
 
-	foreach ($_FILES['file'] as $key => $value) {
-		echo $key." ".$value.": <br>";
-		foreach ($value as $k => $v) {
-			echo $k." ".$v."<br>";
-		}
-	}
-
 	if($_FILES['file']['error'][0] > 0){
 		echo "Error: ".$_FILES["file"]["error"][0]."<br>";
 	} else{
 		$file = $_FILES['file'];
 
-		if(!$source_image = imagecreatefromjpeg($file['tmp_name'][0])){
-			echo "failed";
-		}
-		$width = imagesx($source_image);
-		$height = imagesy($source_image);
+		// if(!$source_image = imagecreatefromjpeg($file['tmp_name'][0])){
+		// 	echo "failed";
+		// }
 
-		$desired_width = 200;
+		// $width = imagesx($source_image);
+		// $height = imagesy($source_image);
 
-		$desired_height = floor($height * ($desired_width / $width));
+		// $desired_width = 100;
 
-		$virtual_image = imagecreatetruecolor($desired_width, $desired_height);
+		// $desired_height = floor($height * ($desired_width / $width));
 
-		imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
+		// $virtual_image = imagecreatetruecolor($desired_width, $desired_height);
 
-		imagejpeg($virtual_image);
+		// imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
+		// header("Content-Type:image/jpeg");
+		// imagejpeg($virtual_image);
 
-
-		add_image($file, $rid);
+		add_image($file, 0);
+	
 	}
-}
+} else{
 
 ?>
 <html>
@@ -64,3 +58,5 @@ if(isset($_POST['create'])){
 	</div>
 </body>
 </html>
+
+<?php } ?>
