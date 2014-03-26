@@ -13,36 +13,15 @@ if(isset($_POST['create'])){
 	make_record($retval, $_POST["patient"], $_POST["doctor"], $_POST["rad"], $_POST["test_type"], $_POST["pers_date"], $_POST["test_date"], $_POST["diag"], $_POST["desc"]);
 
 }
-
-/*else*/if($_POST['upload']){
-
+if($_POST['upload']){
+	$rid = $_POST['record'];
 	if($_FILES['file']['error'][0] > 0){
 		echo "Error: ".$_FILES["file"]["error"][0]."<br>";
 	} else{
 		$file = $_FILES['file'];
-
-		// if(!$source_image = imagecreatefromjpeg($file['tmp_name'][0])){
-		// 	echo "failed";
-		// }
-
-		// $width = imagesx($source_image);
-		// $height = imagesy($source_image);
-
-		// $desired_width = 100;
-
-		// $desired_height = floor($height * ($desired_width / $width));
-
-		// $virtual_image = imagecreatetruecolor($desired_width, $desired_height);
-
-		// imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
-		// header("Content-Type:image/jpeg");
-		// imagejpeg($virtual_image);
-
-		add_image($file, 0);
-	
+		add_image($file, $rid);	
 	}
-} else{
-
+}
 ?>
 <html>
 <head>
@@ -53,10 +32,9 @@ if(isset($_POST['create'])){
 	<div class="center">
 		<form name="addimage" method="post" action="addimage.php" enctype="multipart/form-data">
 			<input type="file" name="file[]"/>
+			<input type="hidden" name="record" value=<?php echo '"'.$rid.'"' ?>>
 			<input type="submit" name="upload"/>
 		</form>
 	</div>
 </body>
 </html>
-
-<?php } ?>
