@@ -299,7 +299,7 @@ function add_image($file, $rid){
 	}
 
 	$file = fopen($file["tmp_name"][0], 'r');
-	$image_binary = fread($file, 100000);
+	$image_binary = fread($file, 1000000);
 
 	$image = imagecreatefromstring($image_binary);
 
