@@ -278,15 +278,15 @@ function add_image($file, $rid){
 	
 	$full_size = oci_new_descriptor($conn, OCI_DTYPE_LOB);
 	$regular_size = oci_new_descriptor($conn, OCI_DTYPE_LOB);
-	$thumbnail = oci_new_descriptor($conn, OCI_DTYPE_LOB);
+	$thumb = oci_new_descriptor($conn, OCI_DTYPE_LOB);
 
-	if(!$full_size || !$regular_size || !$thumbnail){
+	if(!$full_size || !$regular_size || !$thumb){
 		echo "FAILFAILFIAL <br>";
 	}
 
 	oci_bind_by_name($statement, ":fs", $full_size, -1, OCI_B_BLOB);
 	oci_bind_by_name($statement, ":rs", $regular_size, -1, OCI_B_BLOB);
-	oci_bind_by_name($statement, ":tn", $thumbnail, -1, OCI_B_BLOB);
+	oci_bind_by_name($statement, ":tn", $thumb, -1, OCI_B_BLOB);
 
 	$exec = oci_execute($statement, OCI_DEFAULT);
 
@@ -330,9 +330,11 @@ function add_image($file, $rid){
 	$reg_binary = ob_get_contents();
 	ob_end_clean();
 
-	
+	$t = $thumb->save($thumbnail_binary);
+	$r = $regular_size->save($reg_binary);
+	$f = $full_size->save($image_binary);
 
-	if(!$full_size->save($image_binary)) {
+	if(!($t && $r && $f)) {
 		oci_rollback($conn);
 	}
 	else {
