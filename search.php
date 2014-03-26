@@ -24,9 +24,6 @@ if(isset($_POST['search'])){
 
 <html>
 <head>
-  <meta name="generator" content="Bluefish 2.2.2" >
-  <meta name="generator" content="Bluefish 2.2.2" >
-  <meta name="generator" content="Bluefish 2.2.2" >
 
   <title>Radiology Search</title>
   <link rel="stylesheet" type="text/css" href="style.css">
