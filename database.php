@@ -77,7 +77,7 @@ function query_password_change($user, $oldpass, $newpass){
 		} else{
 			$valid = TRUE;
 		}
-	} 
+	}
 
 	oci_free_statement($statement);
 

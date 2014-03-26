@@ -6,7 +6,7 @@ if(isset($_GET['uname'])){
 	$username = $_POST['username'];
 	$status = query_password_change($_POST['username'], $_POST['opassword'], $_POST['npassword']);
 	if($status){
-		header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/login.php");
+		header("Location: http://consort.cs.ualberta.ca/~dekinder/391-Radiology-Information-System/login.php");
 	}
 }
 ?>

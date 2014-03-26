@@ -13,7 +13,7 @@ if(isset($_SESSION['USER_NAME'])){
 	}
 //TODO: create security for classes and add dates to search.
 if(isset($_POST['search'])){
-
+	
 	} else{
 		
 	}
