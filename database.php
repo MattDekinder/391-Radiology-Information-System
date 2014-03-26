@@ -2,7 +2,7 @@
 function connect(){
 
 	//Connects to my Oracle username
-	$connection = oci_connect('esinglet', 'qwertyuiop1');
+	$connection = oci_connect('dekinder', 'qwertyuiop1');
 	if (!$connection) {
 
 		//Gets last error array
@@ -343,5 +343,40 @@ function add_image($file, $rid){
 
 	oci_close($conn);
 	oci_free_statement($statement);
+}
+
+function get_test_types(){
+
+	$conn = connect();
+	$sql = "select test_type as T from radiology_record";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
 	}
-	?>
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($statement);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$count = 0;
+	while($row = oci_fetch_assoc($statement)){
+		$ret[$count] = $row['T'];
+		$count +=1;
+	}
+
+	oci_close($conn);
+	oci_free_statement($statement);
+
+	return $ret;
+
+}
+?>
