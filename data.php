@@ -4,12 +4,12 @@ error_reporting(E_ALL);
 
 include('database.php');
 
-
+$return = false;
 
 if(isset($_POST['sub'])){
 
 	
-	if($istime = !empty($_POST['date'])){
+	if($isdate = !empty($_POST['date'])){
 
 		$d = $_POST['date'];
 
@@ -38,7 +38,7 @@ if(isset($_POST['sub'])){
 		$weekd1 =  $sunday1->format('Y-m-d');
 		$weekdL =  $sunday2->format('Y-m-d');
 
-		echo "Week to week ".$weekd1.' '.$weekdL.'<br>';
+
 	// Month of year (01-12)
 		$month_of_y = (int)date('m', $date);
 
@@ -58,12 +58,9 @@ if(isset($_POST['sub'])){
 		$monthd1 = $daym1->format('Y-m-d');
 		$monthdL = $daymL->format('Y-m-d');
 
-		echo "Month to month ".$monthd1.' '.$monthdL.'<br>';
 
-	// Is it a leap year (0 or 1)?
-		$leap = (int)date("L", $date);
 
-		$dayy1 = date_create_from_format('z Y', strval(0).' '.strval($year));
+		$dayy1 = date_create_from_format('z Y', '00 '.strval($year));
 		$dayyL = date_create_from_format('z Y', '00 '.strval($year+1));
 
 	//First and last day of year inclusive
@@ -73,7 +70,20 @@ if(isset($_POST['sub'])){
 	//Selected period 
 		$period = $_POST['period'];
 
-		echo "Year to Year ".$yeard1.' '.$yeardL.'<br>';
+		$dtype = $_POST['date_type'];
+
+	// Array to pass around
+		unsset($dates);
+
+		$dates['weekd1'] = $weekd1;
+		$dates['weekdL'] = $weekdL;
+		$dates['monthd1'] = $monthd1;
+		$dates['monthdL'] = $monthdL;
+		$dates['yeard1'] = $yeard1;
+		$dates['yeardL'] = $yeardL;
+
+		$date_data = serialize($dates);
+
 	}
 
 	if($istype = !empty($_POST['testt'])){
@@ -82,8 +92,68 @@ if(isset($_POST['sub'])){
 
 	if($ispat = !empty($_POST['patient'])){
 		$patient = $_POST['patient'];
+		$patient_array = explode(",", $patient);
+		$patient_id = $patient_array[0];
+		$plast = $patient_array[1];
+		$pfirst = $patient_array[2];
 	}
-}
+
+
+
+
+
+	$sql = "select count(*) as C from radiology_record ";
+
+	if($nblank = ($isdate || $istype || $ispat)){
+		$sql .= 'where ';
+	}
+
+	if($isdate){
+		switch((int)$period){
+			case 0: // Week
+			if($dtype){ // Perscribing date
+				$sql .= "prescribing_date >= TO_DATE('".$weekd1."', 'YYYY-MM-DD') and prescribing_date < TO_DATE('".$weekdL."', 'YYYY-MM-DD') ";
+			} else{  //test date
+				$sql .= "test_date >= TO_DATE('".$weekd1."', 'YYYY-MM-DD') and test_date < TO_DATE('".$weekdL."', 'YYYY-MM-DD') ";
+			}
+			break;
+			case 1: // Month
+			if($dtype){ // Perscribing date
+				$sql .= "prescribing_date >= TO_DATE('".$monthd1."', 'YYYY-MM-DD') and prescribing_date < TO_DATE('".$monthdL."', 'YYYY-MM-DD') ";
+			} else{  //test date
+				$sql .= "test_date >= TO_DATE('".$monthd1."', 'YYYY-MM-DD') and test_date < TO_DATE('".$monthdL."', 'YYYY-MM-DD') ";
+			}
+			break;
+			case 2: // Year
+			if($dtype){ // Perscribing date
+				$sql .= "prescribing_date >= TO_DATE('".$yeard1."', 'YYYY-MM-DD') and prescribing_date < TO_DATE('".$yeardL."', 'YYYY-MM-DD') ";
+			} else{  //test date
+				$sql .= "test_date >= TO_DATE('".$yeard1."', 'YYYY-MM-DD') and test_date < TO_DATE('".$yeardL."', 'YYYY-MM-DD') ";
+			}
+			break;
+		}
+
+		if($istype || $ispat){
+			$sql .= "and ";
+		}
+	}
+
+	if($istype){
+		$sql .= "test_type = '".$test."' ";
+
+		if($ispat){
+			$sql .= "and ";
+		}
+	}
+
+	if($ispat){
+		$sql .= "patient_id='".$patient_id."' ";
+	}
+
+	$count = exec_count($sql);
+	$return = true;
+	
+}	
 ?>
 <html>
 <head>
@@ -95,9 +165,13 @@ if(isset($_POST['sub'])){
 				<label>Date: </label>
 				<input type="date" name="date"> 
 				<select name="period">
-					<option value="week">Week</option>
-					<option value="month">Month</option>
-					<option value="year">Year</option>	
+					<option value="0">Week</option>
+					<option value="1">Month</option>
+					<option value="2">Year</option>	
+				</select>
+				<select name="date_type">
+					<option value="0">Test Date</option>
+					<option value="1">Prescribing Date</option>
 				</select><br>
 				<label>Test Type: </label>
 				<select name="testt">
@@ -115,12 +189,56 @@ if(isset($_POST['sub'])){
 					<?php
 					$patients = get_patients();
 					foreach ($patients as $value) {
-						echo '<option value="'.$value['PERSON_ID'].'">'.$value['LAST_NAME'].', '.$value['FIRST_NAME'].'</option>';
+						echo '<option value="'.$value['PERSON_ID'].",".$value['LAST_NAME'].",".$value['FIRST_NAME'].'">'.$value['LAST_NAME'].', '.$value['FIRST_NAME'].'</option>';
 					}
 					?>
 				</select> <br>
 				<input type="submit" name="sub">
-			</form>
+			</form>	
+		</div>
+		<div id="space"></div>
+		<div class="center">
+			<?php
+			$s = "COUNT OF RECORDS";
+
+			if(!$nblank){
+				$s.= ": ";
+			} else {
+				$s .= " ";
+			}
+			if($return){
+				if($isdate){
+					switch((int)$period) {
+						case 0: // Week
+						$s .= "FOR THE WEEK OF ".$weekd1; 
+						break;
+						case 1: // Month
+						$s .= "FOR THE MONTH OF ".$monthd1;
+						break;
+						case 2: // Year
+						$s .= "FOR THE YEAR OF ".$yeard1;
+						break;
+					}
+					if($istype || $ispat){
+						$s .= ", ";
+					} else{
+						$s.=": ";
+					}
+				}
+				if($istype){
+					$s .= "FOR THE TEST TYPE ".$type;
+					if($ispat){
+						$s .= ", ";
+					} else{
+						$s.=": ";
+					}
+				}
+				if($ispat){
+					$s .= "FOR PATIENT ".$pfirst." ".$plast.": ";
+				}
+			} 
+			echo "<label>".$s.$count." RECORD(S) FOUND.</label>";
+			?>
 		</div>
 	</body>
 	</html>

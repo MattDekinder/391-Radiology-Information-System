@@ -379,4 +379,35 @@ function get_test_types(){
 	return $ret;
 
 }
+
+function exec_count($sql){
+	$conn = connect();
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($statement);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$row = oci_fetch_assoc($statement);
+
+	$count = $row['C'];
+
+	oci_close($conn);
+	oci_free_statement($statement);
+
+	return $count;
+
+}
 ?>
