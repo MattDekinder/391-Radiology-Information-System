@@ -2,7 +2,7 @@
 function connect(){
 
 	//Connects to my Oracle username
-	$connection = oci_connect('esinglet', 'qwertyuiop1');
+	$connection = oci_connect('dekinder', 'qwertyuiop1');
 	if (!$connection) {
 
 		//Gets last error array
@@ -18,7 +18,6 @@ function connect(){
 function query_login($user, $pass){
 	$conn = connect();
 	$sql = "select * from users u join persons p on u.person_id=p.person_id where user_name='".$user."' and password='".$pass."'";
-
 	if(($statement = oci_parse($conn, $sql)) == false){
 		$err = oci_error($statement);
 		echo htmlentities($err['message']);
