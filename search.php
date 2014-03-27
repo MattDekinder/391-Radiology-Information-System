@@ -21,13 +21,21 @@ function query_search ( $search_string ){
 		}
 		$c = ($c+4);
 	}
-	$sql_string_good = $sql_string_good.") SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from persons, radiology_record where person_id=patient_id and (";	
-	$sql_string_good2 = $sql_string_good2.")";
-
+	$sql_string_good = $sql_string_good.") SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from persons, radiology_record where person_id=patient_id and ";	
+	
+	//if ($_POST['StartDate'])
+	
+	$sql_string_good = $sql_string_good."(";
+	
+	if ($_POST['sorting'] == "relevant"){ $sql_string_good2 = $sql_string_good2.") order by SCORE desc";}
+	else if ($_POST['sorting'] == "td_desc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE desc";}
+	else if ($_POST['sorting'] == "td_asc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE asc";}
+	else if ($_POST['sorting'] == "pd_desc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE desc";}
+	else if ($_POST['sorting'] == "pd_asc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE asc";}
+	
 	$sql = $sql_string_good.$sql_string_good2;
 
 	$conn = connect();
-//	$sql = "select (6*(score(1)+score(2)))+score(3)+(3*score(4)),RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from persons, radiology_record where person_id=patient_id and (CONTAINS(FIRST_NAME,"."'".$key."'".",1) > 0 or CONTAINS(LAST_NAME,"."'".$key."'".", 2) > 0 or CONTAINS(DESCRIPTION, "."'".$key."'".",3) > 0 or CONTAINS(DIAGNOSIS, "."'".$key."'".",4) >0 )";
 	if(($statement = oci_parse($conn, $sql)) == false){
 		$err = oci_error($statement);
 		echo htmlentities($err['message']);
@@ -42,10 +50,40 @@ function query_search ( $search_string ){
 		return FALSE;
 	} else{
 
+		$count = 0;
 		while ($row = oci_fetch_assoc($statement)) {
-			echo $row['SCORE'];
-			echo '<br>';
+			$ret[$count] = $row;
+			$count = $count+1;
 			}
+			return $ret;
+	}
+	oci_free_statement($statement);
+	oci_close($conn);
+}
+
+function query_images (){
+	$conn = connect();
+	//$sql = 
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		return FALSE;
+	} else{
+
+		$count = 0;
+		while ($row = oci_fetch_assoc($statement)) {
+			$ret[$count] = $row;
+			$count = $count+1;
+			}
+			return $ret;
 	}
 	oci_free_statement($statement);
 	oci_close($conn);
@@ -66,16 +104,25 @@ session_start();
         }*/
 //TODO: create security for classes and add dates to search. (for now administrator is assumed)
 
-
+if(!isset($_SESSION['date_ranges'])){
+	$_SESSION['date_ranges']=1;
+	}
 	
 if(isset($_POST['search'])){
 	$search_string = (explode('and',strtolower(trim($_POST['keywords']))));
+	$_SESSION['date_ranges']=1;
 	
-	query_search($search_string);
+	//$s_date = "TO_DATE('".$_POST['StartDate']."', 'YYYY-MM-DD' )";
+	//$e_date = "TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )";
+	$ret = query_search($search_string);
 	
-	} else{
-		
-	}
+	
+} 
+if(isset($_POST['add_dates'])){
+	$_SESSION['date_ranges'] =$_SESSION['date_ranges']+1;
+}	
+	
+else{  }
 
 ?>
 
@@ -99,10 +146,65 @@ if(isset($_POST['search'])){
 
     <form name="search" method="post" action="search.php" id="search">
       Search : <input type="text" name="keywords"><br>
-      Start Date: <input type="date" name="date"><br>
-      End Date: <input type="date" name="date"><br>
+      Sort By: <select name="sorting">
+						<option value="relevant">Most Relevant</option>
+      				<option value="td_desc">Test Date descending</option>
+      				<option value="td_asc">Test Date ascending</option>
+      				<option value="pd_desc">Prescribing Date descending</option>
+      				<option value="pd_asc">Prescribing Date ascending</option>
+      </select><br>
+		<input type="submit" name="add_dates" value="Add Date Range"><br>
+      <?php
+      for ($i=0; $i<$_SESSION['date_ranges']; $i++){
+			echo 'Start Date: <input type="date" name="StartDate'.$i.'"><br> End Date: <input type="date" name="EndDate'.$i.'"><br>';
+      	}
+      ?>
+      <!--Start Date: <input type="date" name="StartDate"><br>
+      End Date: <input type="date" name="EndDate"><br> -->
+      
       <input type="submit" name="search" value="Search"><br>
+      
     </form>
   </div>
 </body>
+<?php if(isset($_POST['search'])){ ?>
+<table width="100%">
+	<tr>
+	<th>Record ID</th>
+	<th>Patient ID</th>
+	<th>Doctor ID</th>
+	<th>Radiologist ID</th>
+	<th>Test Type</th>
+	<th>Prescribing Date</th>
+	<th>Test Date</th>
+	<th>Diagnosis</th>
+	<th>Prescribing Date</th>
+	</tr>
+<?php 
+foreach ($ret as $row){
+	echo "<tr>";
+	foreach ($row as $key => $item){
+		if ($key != "SCORE"){
+			echo "<th> ".$item." </th>";
+		}
+	}
+	echo "</tr>";
+}
+	?>
+</table>
+<?php } ?>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
