@@ -23,10 +23,16 @@ function query_search ( $search_string ){
 	}
 	$sql_string_good = $sql_string_good.") SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from persons, radiology_record where person_id=patient_id and ";	
 	
+	//if ($_POST['StartDate'])
 	
 	$sql_string_good = $sql_string_good."(";
-	$sql_string_good2 = $sql_string_good2.") order by SCORE desc";
-
+	
+	if ($_POST['sorting'] == "relevant"){ $sql_string_good2 = $sql_string_good2.") order by SCORE desc";}
+	else if ($_POST['sorting'] == "td_desc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE desc";}
+	else if ($_POST['sorting'] == "td_asc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE asc";}
+	else if ($_POST['sorting'] == "pd_desc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE desc";}
+	else if ($_POST['sorting'] == "pd_asc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE asc";}
+	
 	$sql = $sql_string_good.$sql_string_good2;
 
 	$conn = connect();
@@ -98,19 +104,25 @@ session_start();
         }*/
 //TODO: create security for classes and add dates to search. (for now administrator is assumed)
 
-
+if(!isset($_SESSION['date_ranges'])){
+	$_SESSION['date_ranges']=1;
+	}
 	
 if(isset($_POST['search'])){
 	$search_string = (explode('and',strtolower(trim($_POST['keywords']))));
+	$_SESSION['date_ranges']=1;
 	
-	$s_date = "TO_DATE('".$_POST['StartDate']."', 'YYYY-MM-DD' )";
-	$e_date = "TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )";
+	//$s_date = "TO_DATE('".$_POST['StartDate']."', 'YYYY-MM-DD' )";
+	//$e_date = "TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )";
 	$ret = query_search($search_string);
 	
 	
-	} else{
-		
-	}
+} 
+if(isset($_POST['add_dates'])){
+	$_SESSION['date_ranges'] =$_SESSION['date_ranges']+1;
+}	
+	
+else{  }
 
 ?>
 
@@ -134,9 +146,24 @@ if(isset($_POST['search'])){
 
     <form name="search" method="post" action="search.php" id="search">
       Search : <input type="text" name="keywords"><br>
-      Start Date: <input type="date" name="StartDate"><br>
-      End Date: <input type="date" name="EndDate"><br>
+      Sort By: <select name="sorting">
+						<option value="relevant">Most Relevant</option>
+      				<option value="td_desc">Test Date descending</option>
+      				<option value="td_asc">Test Date ascending</option>
+      				<option value="pd_desc">Prescribing Date descending</option>
+      				<option value="pd_asc">Prescribing Date ascending</option>
+      </select><br>
+		<input type="submit" name="add_dates" value="Add Date Range"><br>
+      <?php
+      for ($i=0; $i<$_SESSION['date_ranges']; $i++){
+			echo 'Start Date: <input type="date" name="StartDate'.$i.'"><br> End Date: <input type="date" name="EndDate'.$i.'"><br>';
+      	}
+      ?>
+      <!--Start Date: <input type="date" name="StartDate"><br>
+      End Date: <input type="date" name="EndDate"><br> -->
+      
       <input type="submit" name="search" value="Search"><br>
+      
     </form>
   </div>
 </body>
