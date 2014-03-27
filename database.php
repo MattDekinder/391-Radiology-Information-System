@@ -265,7 +265,7 @@ function add_image($file, $rid){
 	$iid = rows_count('pacs_images');
 
 	$conn = connect();
-	$sql = "insert into pacs_images (record_id, image_id, thumbnail, regular_size, full_size) VALUES(0, 0, empty_blob(), empty_blob(), empty_blob()) RETURNING thumbnail, regular_size, full_size into :tn, :rs, :fs";
+	$sql = "insert into pacs_images (record_id, image_id, thumbnail, regular_size, full_size) VALUES(".$rid.", ".$iid.", empty_blob(), empty_blob(), empty_blob()) RETURNING thumbnail, regular_size, full_size into :tn, :rs, :fs";
 
 	if(($statement = oci_parse($conn, $sql)) == false){
 		$err = oci_error($statement);
@@ -277,15 +277,11 @@ function add_image($file, $rid){
 	
 	$full_size = oci_new_descriptor($conn, OCI_DTYPE_LOB);
 	$regular_size = oci_new_descriptor($conn, OCI_DTYPE_LOB);
-	$thumbnail = oci_new_descriptor($conn, OCI_DTYPE_LOB);
-
-	if(!$full_size || !$regular_size || !$thumbnail){
-		echo "FAILFAILFIAL <br>";
-	}
+	$thumb = oci_new_descriptor($conn, OCI_DTYPE_LOB);
 
 	oci_bind_by_name($statement, ":fs", $full_size, -1, OCI_B_BLOB);
 	oci_bind_by_name($statement, ":rs", $regular_size, -1, OCI_B_BLOB);
-	oci_bind_by_name($statement, ":tn", $thumbnail, -1, OCI_B_BLOB);
+	oci_bind_by_name($statement, ":tn", $thumb, -1, OCI_B_BLOB);
 
 	$exec = oci_execute($statement, OCI_DEFAULT);
 
@@ -298,7 +294,7 @@ function add_image($file, $rid){
 	}
 
 	$file = fopen($file["tmp_name"][0], 'r');
-	$image_binary = fread($file, 100000);
+	$image_binary = fread($file, 1000000);
 
 	$image = imagecreatefromstring($image_binary);
 
@@ -329,9 +325,11 @@ function add_image($file, $rid){
 	$reg_binary = ob_get_contents();
 	ob_end_clean();
 
-	
+	$t = $thumb->save($thumbnail_binary);
+	$r = $regular_size->save($reg_binary);
+	$f = $full_size->save($image_binary);
 
-	if(!$full_size->save($image_binary)) {
+	if(!($t && $r && $f)) {
 		oci_rollback($conn);
 	}
 	else {
@@ -340,5 +338,78 @@ function add_image($file, $rid){
 
 	oci_close($conn);
 	oci_free_statement($statement);
+}
+
+function get_test_types(){
+
+	$conn = connect();
+	$sql = "select test_type as T from radiology_record";
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
 	}
-	?>
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($statement);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$count = 0;
+	while($row = oci_fetch_assoc($statement)){
+		$ret[$count] = $row['T'];
+		$count +=1;
+	}
+
+	oci_close($conn);
+	oci_free_statement($statement);
+
+	return $ret;
+
+}
+
+function exec_count($sql, $date, $start, $end){
+	$conn = connect();
+
+	if($date){
+		$query_array = explode("?----?", $sql);
+		$sql = $query_array[0].$start.$query_array[1].$end.$query_array[2];
+	}
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($statement);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$row = oci_fetch_assoc($statement);
+
+	$count = $row['C'];
+
+	oci_close($conn);
+	oci_free_statement($statement);
+
+	return $count;
+
+}
+?>
