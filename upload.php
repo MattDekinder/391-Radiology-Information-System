@@ -4,6 +4,9 @@ session_start();
 $patients = get_patients();
 $doctors = get_doctors();
 $rads = get_radiolog();
+
+$rad_id = $_SESSION["PERSON_ID"];
+echo "Rad:".$rad_id;
 ?>
 
 <html>
@@ -28,14 +31,7 @@ $rads = get_radiolog();
 					echo '<option value="'.$doc['PERSON_ID'].'" >'.$doc['LAST_NAME'].", ".$doc["FIRST_NAME"].'</option>';
 				}?>
 			</select>
-			<br>
-			<label>Radiologist: </label>
-			<select name="rad">
-				<?php
-				foreach ($rads as $rad) {
-					echo '<option value="'.$rad['PERSON_ID'].'" >'.$rad['LAST_NAME'].", ".$rad["FIRST_NAME"].'</option>';
-				}?>
-			</select>
+			<input type="hidden" name="rad" value="<?php echo $rad_id ?>">
 			<br>
 			<label>Test Type: </label>
 			<input type="text" name="test_type" maxlength="23"> <br>

@@ -27,3 +27,10 @@ form {
 #space {
 	height: 8px;
 }
+
+#menu{
+	border-style:solid;
+	border-width:1px;
+	background-color:#b0c4de;
+	font-size: 3em;
+}

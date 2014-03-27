@@ -4,6 +4,10 @@ error_reporting(E_ALL);
 
 include('database.php');
 
+if(isset($_POST['back'])){
+	header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/search.php");
+}
+
 $return = false;
 $nblank = false;
 $reop = false;
@@ -290,6 +294,7 @@ if(isset($_POST['sub'])){
 					?>
 				</select> <br>
 				<input type="submit" name="sub">
+				<input type="submit" name="back" value="Back">
 			</form>	
 		</div>
 		<div id="space"></div>
