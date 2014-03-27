@@ -6,7 +6,7 @@ include("database.php");
 session_start();
 
 
-$retval = rows_count("radiology_record");
+$retval = rows_count("radiology_record") + 1;
 if(isset($_POST['create'])){
 
 	$rid = $retval;
