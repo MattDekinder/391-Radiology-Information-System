@@ -5,6 +5,8 @@ error_reporting(E_ALL);
 include('database.php');
 
 $return = false;
+$nblank = false;
+$count = 0;
 
 if(isset($_POST['sub'])){
 
@@ -73,7 +75,7 @@ if(isset($_POST['sub'])){
 		$dtype = $_POST['date_type'];
 
 	// Array to pass around
-		unsset($dates);
+		// unsset($dates);
 
 		$dates['weekd1'] = $weekd1;
 		$dates['weekdL'] = $weekdL;
@@ -112,24 +114,34 @@ if(isset($_POST['sub'])){
 		switch((int)$period){
 			case 0: // Week
 			if($dtype){ // Perscribing date
-				$sql .= "prescribing_date >= TO_DATE('".$weekd1."', 'YYYY-MM-DD') and prescribing_date < TO_DATE('".$weekdL."', 'YYYY-MM-DD') ";
+				$sql .= "prescribing_date >= TO_DATE(':start', 'YYYY-MM-DD') and prescribing_date < TO_DATE('end', 'YYYY-MM-DD') ";
 			} else{  //test date
-				$sql .= "test_date >= TO_DATE('".$weekd1."', 'YYYY-MM-DD') and test_date < TO_DATE('".$weekdL."', 'YYYY-MM-DD') ";
+				$sql .= "test_date >= TO_DATE(':start', 'YYYY-MM-DD') and test_date < TO_DATE(':end', 'YYYY-MM-DD') ";
 			}
+
+			$start = $weekd1;
+			$end = $weekdL;
+
 			break;
 			case 1: // Month
 			if($dtype){ // Perscribing date
-				$sql .= "prescribing_date >= TO_DATE('".$monthd1."', 'YYYY-MM-DD') and prescribing_date < TO_DATE('".$monthdL."', 'YYYY-MM-DD') ";
+				$sql .= "prescribing_date >= TO_DATE(':start', 'YYYY-MM-DD') and prescribing_date < TO_DATE(':end', 'YYYY-MM-DD') ";
 			} else{  //test date
-				$sql .= "test_date >= TO_DATE('".$monthd1."', 'YYYY-MM-DD') and test_date < TO_DATE('".$monthdL."', 'YYYY-MM-DD') ";
+				$sql .= "test_date >= TO_DATE(':sart', 'YYYY-MM-DD') and test_date < TO_DATE(':end', 'YYYY-MM-DD') ";
 			}
+
+			$start = $monthd1;
+			$end = $monthdL;
 			break;
 			case 2: // Year
 			if($dtype){ // Perscribing date
-				$sql .= "prescribing_date >= TO_DATE('".$yeard1."', 'YYYY-MM-DD') and prescribing_date < TO_DATE('".$yeardL."', 'YYYY-MM-DD') ";
+				$sql .= "prescribing_date >= TO_DATE(':start', 'YYYY-MM-DD') and prescribing_date < TO_DATE(':end', 'YYYY-MM-DD') ";
 			} else{  //test date
-				$sql .= "test_date >= TO_DATE('".$yeard1."', 'YYYY-MM-DD') and test_date < TO_DATE('".$yeardL."', 'YYYY-MM-DD') ";
+				$sql .= "test_date >= TO_DATE(':start', 'YYYY-MM-DD') and test_date < TO_DATE(':end', 'YYYY-MM-DD') ";
 			}
+
+			$start = $yeard1;
+			$end = $yeardL;
 			break;
 		}
 
@@ -150,7 +162,7 @@ if(isset($_POST['sub'])){
 		$sql .= "patient_id='".$patient_id."' ";
 	}
 
-	$count = exec_count($sql);
+	$count = exec_count($sql, $start, $end);
 	$return = true;
 	
 }	
@@ -197,7 +209,7 @@ if(isset($_POST['sub'])){
 			</form>	
 		</div>
 		<div id="space"></div>
-		<div class="center">
+		
 			<?php
 			$s = "COUNT OF RECORDS";
 
@@ -207,6 +219,7 @@ if(isset($_POST['sub'])){
 				$s .= " ";
 			}
 			if($return){
+				echo '<div class="center">';
 				if($isdate){
 					switch((int)$period) {
 						case 0: // Week
@@ -226,7 +239,7 @@ if(isset($_POST['sub'])){
 					}
 				}
 				if($istype){
-					$s .= "FOR THE TEST TYPE ".$type;
+					$s .= "FOR THE TEST TYPE ".$test;
 					if($ispat){
 						$s .= ", ";
 					} else{
@@ -236,9 +249,39 @@ if(isset($_POST['sub'])){
 				if($ispat){
 					$s .= "FOR PATIENT ".$pfirst." ".$plast.": ";
 				}
+
+				echo "<label>".$s.$count." RECORD(S) FOUND.</label><br>";
+
+				if($isdate){
+					?>
+					<form action="data.php" method ='post'>
+					<input type="hidden" name="dates" value='"'<?php echo $date_data ?>'"'>
+						<?php
+						if((int)$period == 0){ // week
+							?>
+							<input type="submit" name="du_month" value="See Month">
+							<input type="submit" name="du_year" value="See Year">
+							<?php
+						}elseif((int)$period == 1){ // month
+							?>
+							<input type="submit" name="rd_week" value="See Week">
+							<input type="submit" name="du_year" value="See Year">
+							<?php
+						} elseif((int)$period == 2){ //Year
+							?>
+							<input type="submit" name="rd_week" value="See Week">
+							<input type="submit" name="rd_month" value="See Month">
+							<?php
+						}
+						?>
+					</form>
+					<?php
+				}
+
+				echo "</div>";
 			} 
-			echo "<label>".$s.$count." RECORD(S) FOUND.</label>";
+			
 			?>
-		</div>
+		
 	</body>
 	</html>

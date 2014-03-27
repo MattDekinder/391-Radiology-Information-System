@@ -280,10 +280,6 @@ function add_image($file, $rid){
 	$regular_size = oci_new_descriptor($conn, OCI_DTYPE_LOB);
 	$thumb = oci_new_descriptor($conn, OCI_DTYPE_LOB);
 
-	if(!$full_size || !$regular_size || !$thumb){
-		echo "FAILFAILFIAL <br>";
-	}
-
 	oci_bind_by_name($statement, ":fs", $full_size, -1, OCI_B_BLOB);
 	oci_bind_by_name($statement, ":rs", $regular_size, -1, OCI_B_BLOB);
 	oci_bind_by_name($statement, ":tn", $thumb, -1, OCI_B_BLOB);
@@ -380,7 +376,7 @@ function get_test_types(){
 
 }
 
-function exec_count($sql){
+function exec_count($sql, $start, $end){
 	$conn = connect();
 
 	if(($statement = oci_parse($conn, $sql)) == false){
@@ -390,7 +386,12 @@ function exec_count($sql){
 		return FALSE;
 	}
 
-	$exec = oci_execute($statement);
+	oci_bind_by_name($statement, ":start", $start, -1, SQLT_INT);
+	oci_bind_by_name($statement, ":end", $end, -1, SQLT_INT);
+
+
+
+	$exec = oci_execute($statement, OCI_DEFAULT);
 
 	if(!$exec){
 		$err = oci_error($statement);
