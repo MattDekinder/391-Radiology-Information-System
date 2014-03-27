@@ -6,7 +6,11 @@ include('database.php');
 
 $return = false;
 $nblank = false;
+$reop = false;
 $count = 0;
+
+$start = '';
+$end = '';
 
 if(isset($_POST['sub'])){
 
@@ -114,9 +118,9 @@ if(isset($_POST['sub'])){
 		switch((int)$period){
 			case 0: // Week
 			if($dtype){ // Perscribing date
-				$sql .= "prescribing_date >= TO_DATE(':start', 'YYYY-MM-DD') and prescribing_date < TO_DATE('end', 'YYYY-MM-DD') ";
+				$sql .= "prescribing_date >= TO_DATE('?----?', 'YYYY-MM-DD') and prescribing_date < TO_DATE('?----?', 'YYYY-MM-DD') ";
 			} else{  //test date
-				$sql .= "test_date >= TO_DATE(':start', 'YYYY-MM-DD') and test_date < TO_DATE(':end', 'YYYY-MM-DD') ";
+				$sql .= "test_date >= TO_DATE('?----?', 'YYYY-MM-DD') and test_date < TO_DATE('?----?', 'YYYY-MM-DD') ";
 			}
 
 			$start = $weekd1;
@@ -125,9 +129,9 @@ if(isset($_POST['sub'])){
 			break;
 			case 1: // Month
 			if($dtype){ // Perscribing date
-				$sql .= "prescribing_date >= TO_DATE(':start', 'YYYY-MM-DD') and prescribing_date < TO_DATE(':end', 'YYYY-MM-DD') ";
+				$sql .= "prescribing_date >= TO_DATE('?----?', 'YYYY-MM-DD') and prescribing_date < TO_DATE('?----?', 'YYYY-MM-DD') ";
 			} else{  //test date
-				$sql .= "test_date >= TO_DATE(':sart', 'YYYY-MM-DD') and test_date < TO_DATE(':end', 'YYYY-MM-DD') ";
+				$sql .= "test_date >= TO_DATE('?----?', 'YYYY-MM-DD') and test_date < TO_DATE('?----?', 'YYYY-MM-DD') ";
 			}
 
 			$start = $monthd1;
@@ -135,9 +139,9 @@ if(isset($_POST['sub'])){
 			break;
 			case 2: // Year
 			if($dtype){ // Perscribing date
-				$sql .= "prescribing_date >= TO_DATE(':start', 'YYYY-MM-DD') and prescribing_date < TO_DATE(':end', 'YYYY-MM-DD') ";
+				$sql .= "prescribing_date >= TO_DATE('?----?', 'YYYY-MM-DD') and prescribing_date < TO_DATE('?----?', 'YYYY-MM-DD') ";
 			} else{  //test date
-				$sql .= "test_date >= TO_DATE(':start', 'YYYY-MM-DD') and test_date < TO_DATE(':end', 'YYYY-MM-DD') ";
+				$sql .= "test_date >= TO_DATE('?----?', 'YYYY-MM-DD') and test_date < TO_DATE('?----?', 'YYYY-MM-DD') ";
 			}
 
 			$start = $yeard1;
@@ -162,10 +166,90 @@ if(isset($_POST['sub'])){
 		$sql .= "patient_id='".$patient_id."' ";
 	}
 
-	$count = exec_count($sql, $start, $end);
+
+	if($isdate){
+		$count = exec_count($sql, 1, $start, $end);
+	} else {
+		$count = exec_count($sql, 0,0,0);
+	}
+
 	$return = true;
 	
-}	
+} elseif(isset($_POST['week'])){
+
+	$sql = stripslashes($_POST['query']);
+
+	$count = exec_count($sql, 1, stripslashes($_POST["weekd1"]), stripslashes($_POST["weekdL"]));
+
+	$s = stripslashes($_POST["s1"]);
+	$reop = true;
+	$return = true;
+	$isdate = true;
+
+	$s1 = stripslashes($_POST['s1']);
+	$s2 = stripslashes($_POST['s2']);
+	$s3 = stripslashes($_POST['s3']);
+
+	$weekd1 = stripslashes($_POST["weekd1"]);
+	$weekdL = stripslashes($_POST["weekdL"]);
+	$monthd1 = stripslashes($_POST["monthd1"]);
+	$monthdL = stripslashes($_POST["monthdL"]);
+	$yeard1 = stripslashes($_POST["yeard1"]);
+	$yeardL = stripslashes($_POST["yeardL"]);
+
+	$period = "0";
+
+
+
+} elseif(isset($_POST['month'])){
+	$sql = stripslashes($_POST['query']);
+
+	$count = exec_count($sql, 1, stripslashes($_POST["monthd1"]), stripslashes($_POST["monthdL"]));
+	$s = stripslashes($_POST["s2"]);
+	$reop = true;
+	$return = true;
+	$isdate = true;
+
+
+	$s1 = stripslashes($_POST['s1']);
+	$s2 = stripslashes($_POST['s2']);
+	$s3 = stripslashes($_POST['s3']);
+
+	$weekd1 = stripslashes($_POST["weekd1"]);
+	$weekdL = stripslashes($_POST["weekdL"]);
+	$monthd1 = stripslashes($_POST["monthd1"]);
+	$monthdL = stripslashes($_POST["monthdL"]);
+	$yeard1 = stripslashes($_POST["yeard1"]);
+	$yeardL = stripslashes($_POST["yeardL"]);
+
+	$period = "1";
+
+
+} elseif(isset($_POST['year'])){
+
+	$sql = stripslashes($_POST['query']);
+
+	$count = exec_count($sql, 1, stripslashes($_POST["yeard1"]), stripslashes($_POST["yeardL"]));
+
+	$s = stripslashes($_POST["s3"]);
+	$reop = true;
+	$return = true;
+	$isdate = true;
+
+
+	$s1 = stripslashes($_POST['s1']);
+	$s2 = stripslashes($_POST['s2']);
+	$s3 = stripslashes($_POST['s3']);
+
+	$weekd1 = stripslashes($_POST["weekd1"]);
+	$weekdL = stripslashes($_POST["weekdL"]);
+	$monthd1 = stripslashes($_POST["monthd1"]);
+	$monthdL = stripslashes($_POST["monthdL"]);
+	$yeard1 = stripslashes($_POST["yeard1"]);
+	$yeardL = stripslashes($_POST["yeardL"]);
+
+	$period = "2";
+}
 ?>
 <html>
 <head>
@@ -210,67 +294,91 @@ if(isset($_POST['sub'])){
 		</div>
 		<div id="space"></div>
 		
-			<?php
-			$s = "COUNT OF RECORDS";
+		<?php
 
-			if(!$nblank){
-				$s.= ": ";
-			} else {
-				$s .= " ";
-			}
-			if($return){
-				echo '<div class="center">';
-				if($isdate){
-					switch((int)$period) {
-						case 0: // Week
-						$s .= "FOR THE WEEK OF ".$weekd1; 
-						break;
-						case 1: // Month
-						$s .= "FOR THE MONTH OF ".$monthd1;
-						break;
-						case 2: // Year
-						$s .= "FOR THE YEAR OF ".$yeard1;
-						break;
-					}
-					if($istype || $ispat){
-						$s .= ", ";
-					} else{
-						$s.=": ";
-					}
+		if($return){
+			echo '<div class="center">';
+			
+			if(!$reop){
+				$s = "COUNT OF RECORDS";
+
+				if(!$nblank){
+					$s.= ": ";
+				} else {
+					$s .= " ";
 				}
+
 				if($istype){
 					$s .= "FOR THE TEST TYPE ".$test;
-					if($ispat){
+					if($isdate || $ispat){
 						$s .= ", ";
 					} else{
 						$s.=": ";
 					}
 				}
+
 				if($ispat){
 					$s .= "FOR PATIENT ".$pfirst." ".$plast.": ";
+
+					if($isdate){
+						$s .= ", ";
+					} else{
+						$s.=": ";
+					}
 				}
 
-				echo "<label>".$s.$count." RECORD(S) FOUND.</label><br>";
-
 				if($isdate){
-					?>
-					<form action="data.php" method ='post'>
-					<input type="hidden" name="dates" value='"'<?php echo $date_data ?>'"'>
-						<?php
+					$s1 = $s."FOR THE WEEK OF ".$weekd1.": "; 
+					$s2 = $s."FOR THE MONTH OF ".$monthd1.": ";
+					$s3 = $s."FOR THE YEAR OF ".$yeard1.": ";
+
+					switch((int)$period) {
+						case 0: // Week
+						$s = $s1;
+						break;
+						case 1: // Month
+						$s = $s2;
+						break;
+						case 2: // Year
+						$s = $s3;
+						break;
+					}
+				}
+
+			}
+
+			echo "<label>".$s.$count." RECORD(S) FOUND.</label><br>";
+			if($isdate){
+				?>
+				<form action="data.php" method ='post'>
+
+					<input type="hidden" name="s1" value="<?php echo $s1 ?>">
+					<input type="hidden" name="s2" value="<?php echo $s2 ?>">
+					<input type="hidden" name="s3" value="<?php echo $s3 ?>">
+
+					<input type="hidden" name="weekd1" value="<?php echo $weekd1 ?>">
+					<input type="hidden" name="weekdL" value="<?php echo $weekdL ?>">
+					<input type="hidden" name="monthd1" value="<?php echo $monthd1 ?>">
+					<input type="hidden" name="monthdL" value="<?php echo $monthdL ?>">
+					<input type="hidden" name="yeard1" value="<?php echo $yeard1 ?>">
+					<input type="hidden" name="yeardL" value="<?php echo $yeardL ?>">
+
+					<input type="hidden" name="query" value="<?php echo $sql ?>">
+					<?php
 						if((int)$period == 0){ // week
 							?>
-							<input type="submit" name="du_month" value="See Month">
-							<input type="submit" name="du_year" value="See Year">
+							<input type="submit" name="month" value="See Month">
+							<input type="submit" name="year" value="See Year">
 							<?php
 						}elseif((int)$period == 1){ // month
 							?>
-							<input type="submit" name="rd_week" value="See Week">
-							<input type="submit" name="du_year" value="See Year">
+							<input type="submit" name="week" value="See Week">
+							<input type="submit" name="year" value="See Year">
 							<?php
 						} elseif((int)$period == 2){ //Year
 							?>
-							<input type="submit" name="rd_week" value="See Week">
-							<input type="submit" name="rd_month" value="See Month">
+							<input type="submit" name="week" value="See Week">
+							<input type="submit" name="month" value="See Month">
 							<?php
 						}
 						?>
@@ -282,6 +390,6 @@ if(isset($_POST['sub'])){
 			} 
 			
 			?>
-		
-	</body>
-	</html>
+
+		</body>
+		</html>

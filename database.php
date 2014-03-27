@@ -376,8 +376,13 @@ function get_test_types(){
 
 }
 
-function exec_count($sql, $start, $end){
+function exec_count($sql, $date, $start, $end){
 	$conn = connect();
+
+	if($date){
+		$query_array = explode("?----?", $sql);
+		$sql = $query_array[0].$start.$query_array[1].$end.$query_array[2];
+	}
 
 	if(($statement = oci_parse($conn, $sql)) == false){
 		$err = oci_error($statement);
@@ -386,12 +391,9 @@ function exec_count($sql, $start, $end){
 		return FALSE;
 	}
 
-	oci_bind_by_name($statement, ":start", $start, -1, SQLT_INT);
-	oci_bind_by_name($statement, ":end", $end, -1, SQLT_INT);
 
 
-
-	$exec = oci_execute($statement, OCI_DEFAULT);
+	$exec = oci_execute($statement);
 
 	if(!$exec){
 		$err = oci_error($statement);
