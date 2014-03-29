@@ -18,29 +18,43 @@ function query_search ( $search_string ){
 			$sql_string_good2 = $sql_string_good2.$sql_string2;
 		}
 		else{ $sql_string_good2 = $sql_string_good2." or ".$sql_string2;
-	}
+		}
 	$c = ($c+4);
-}
-$sql_string_good = $sql_string_good.") SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from persons, radiology_record where person_id=patient_id and ";	
-
-	//if ($_POST['StartDate'])
-
-$sql_string_good = $sql_string_good."(";
+	}
+	$sql_string_good = $sql_string_good.") SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from persons, radiology_record where person_id=patient_id and ";	
+	
+	if(!empty($_POST['StartDate'])){
+		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE>=".$_SESSION['start_date']." or TEST_DATE>=".$_SESSION['start_date'].") and ";
+	}
+	
+	if(!empty($_POST['EndDate'])){
+		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE>=".$_SESSION['end_date']." or TEST_DATE>=".$_SESSION['end_date'].") and ";
+	}
+	
+	$sql_string_good = $sql_string_good."(";
 	
 	if ($_POST['sorting'] == "relevant"){ $sql_string_good2 = $sql_string_good2.") order by SCORE desc";}
-else if ($_POST['sorting'] == "td_desc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE desc";}
-else if ($_POST['sorting'] == "td_asc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE asc";}
-else if ($_POST['sorting'] == "pd_desc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE desc";}
-else if ($_POST['sorting'] == "pd_asc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE asc";}
-
-$sql = $sql_string_good.$sql_string_good2;
-
-$conn = connect();
-if(($statement = oci_parse($conn, $sql)) == false){
-	$err = oci_error($statement);
-	echo htmlentities($err['message']);
-	return FALSE;
+	else if ($_POST['sorting'] == "td_desc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE desc";}
+	else if ($_POST['sorting'] == "td_asc"){ $sql_string_good2 = $sql_string_good2.") order by TEST_DATE asc";}
+	else if ($_POST['sorting'] == "pd_desc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE desc";}
+	else if ($_POST['sorting'] == "pd_asc"){ $sql_string_good2 = $sql_string_good2.") order by PRESCRIBING_DATE asc";}
+	
+	$sql = $sql_string_good.$sql_string_good2;
+	return $sql;
 }
+
+
+/*recieves a sql search string and excecutes it in oracle.
+Returns an 2-dimensional associative array of the results.
+**Do not modify the search string such that the order of columns changes** */
+function query_search_exec ($sql){
+	$conn = connect();
+	$ret=false;
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		return FALSE;
+	}
 
 $exec = oci_execute($statement);
 
@@ -171,14 +185,8 @@ session_start();
             			<option value="pd_desc">Prescribing Date descending</option>
             			<option value="pd_asc">Prescribing Date ascending</option>
             		</select><br>
-            		<input type="submit" name="add_dates" value="Add Date Range"><br>
-            		<?php
-            		for ($i=0; $i<$_SESSION['date_ranges']; $i++){
-            			echo 'Start Date: <input type="date" name="StartDate'.$i.'"><br> End Date: <input type="date" name="EndDate'.$i.'"><br>';
-            		}
-            		?>
-      <!--Start Date: <input type="date" name="StartDate"><br>
-      End Date: <input type="date" name="EndDate"><br> -->
+            		      Start Date: <input type="date" name="StartDate"><br>
+   						   End Date: <input type="date" name="EndDate"><br>
       
       <input type="submit" name="search" value="Search"><br>
       
