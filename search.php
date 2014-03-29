@@ -155,7 +155,7 @@ session_start();
             	<div id="space"></div>
             	<div class="center">
             	<?php if($_SESSION['CLASS'] == 'r') { ?>
-            		<form action="http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/upload.php">
+            		<form action="http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/upload.php">
             			<input type="submit" value="Upload">
             		</form>
             	<?php }?>
@@ -163,10 +163,10 @@ session_start();
             		<form action="">
             			<input type="submit" value="User Management">
             		</form>
-            		<form action="http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/data.php">
+            		<form action="http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/data.php">
             			<input type="submit" value="Data Analysis">
             		</form>
-            		<form action="">
+            		<form action="http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/report.php">
             			<input type="submit" value="Report Generate">
             		</form>
             	<?php }?>

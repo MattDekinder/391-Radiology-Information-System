@@ -6,7 +6,7 @@ $doctors = get_doctors();
 $rads = get_radiolog();
 
 $rad_id = $_SESSION["PERSON_ID"];
-echo "Rad:".$rad_id;
+echo "Radiologist ID: ".$rad_id;
 ?>
 
 <html>
