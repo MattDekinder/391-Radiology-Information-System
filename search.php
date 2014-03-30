@@ -204,7 +204,11 @@ session_start();
 			echo "<tr>";
 			foreach ($images as $col){
 				foreach ($col as $img){
-					echo "<th> ".'<img src="thumb.php?id='.$img.'">'." </th>";
+					echo "<th>";
+					echo '<p> <a href="image_reg.php?id='.$img.'"target="_blank">';
+					echo '<img src="thumb.php?id='.$img.'">';
+					echo '';
+					echo "</a> </p> </th>";
 					
 				}
 			}
