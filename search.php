@@ -70,21 +70,9 @@ function query_images ($id){
 }
 
 
-ini_set('display_errors',1);
+//ini_set('display_errors',1);
 include('database.php');
 session_start();
-/*if(isset($_SESSION['USER_NAME'])){
-                echo $_SESSION['USER_NAME']."<br>";
-                echo $_SESSION['CLASS']."<br>";
-                echo $_SESSION['PERSON_ID']."<br>";
-                echo $_SESSION['FIRST_NAME']."<br>";
-                echo $_SESSION['LAST_NAME']."<br>";
-                echo $_SESSION['ADDRESS']."<br>";
-                echo $_SESSION['EMAIL']."<br>";
-                echo $_SESSION['PHONE']."<br>";
-            }*/
-            
-       
             
 // Security is defined in the following code: first, an sql query is generated. Then the query is wrapped in a security query and executed
 
@@ -101,17 +89,18 @@ session_start();
 					}
 					
 					if($_SESSION['CLASS']=='p') {
-					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where PATIENT_ID = PERSON_ID and PATIENT_ID ='".$_SESSION['PERSON_ID']."'";
+					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String.") where PATIENT_ID ='".$_SESSION['PERSON_ID']."'";
             	$ret = query_search_exec($SQL_String);
 					}
 					
 					if($_SESSION['CLASS']=='r') {
-					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where RADIOLOGIST_ID = PERSON_ID and RADIOLOGIST_ID ='".$_SESSION['PERSON_ID']."'";
+					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String.") where RADIOLOGIST_ID ='".$_SESSION['PERSON_ID']."'";
             	$ret = query_search_exec($SQL_String);
 					}
 					
 					if($_SESSION['CLASS']=='d') {
-					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where DOCTOR_ID = PERSON_ID and DOCTOR_ID ='".$_SESSION['PERSON_ID']."'";
+					$SQL_String = "select SCORE,RECORD_ID,s.PATIENT_ID,s.DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String.") s join FAMILY_DOCTOR d on s.PATIENT_ID=d.PATIENT_ID where d.DOCTOR_ID ='".$_SESSION['PERSON_ID']."'";
+					echo $SQL_String;
             	$ret = query_search_exec($SQL_String);
 					}
 
@@ -144,7 +133,7 @@ session_start();
             		</form>
             	<?php }?>
             	<?php if($_SESSION['CLASS'] == 'a') { ?>
-            		<form action="">
+            		<form action="http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/manage.php">
             			<input type="submit" value="User Management">
             		</form>
             		<form action="http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/data.php">

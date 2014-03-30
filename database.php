@@ -420,7 +420,7 @@ function query_search_exec ($sql){
 	$ret;
 	if(($statement = oci_parse($conn, $sql)) == false){
 		$err = oci_error($statement);
-		echo htmlentities($err['message']);
+		//echo htmlentities($err['message']);
 		return FALSE;
 	}
 
@@ -428,7 +428,7 @@ $exec = oci_execute($statement);
 
 if(!$exec){
 	$err = oci_error($statement);
-	echo htmlentities($err['message']);
+	//echo htmlentities($err['message']);
 	return FALSE;
 } else{
 
