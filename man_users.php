@@ -22,7 +22,7 @@ session_start();
 			<label>Password: </label>
 			<input type="text" name="password"><br>
 			<label>User Type: </label>
-			<select name="utype">
+			<select name="utype" value="a">
 				<option value="p">Patient</option>
 				<option value="r">Radiologist</option>
 				<option value="d">Doctor</option>
@@ -47,7 +47,9 @@ if ($_POST['search']){
 		echo '<input type="text" name="class" value="'.$row['CLASS'].'">';
 		echo '<input type="text" name="person_id" value="'.$row['PERSON_ID'].'">';
 		echo '<input type="date" name="date_reg" value="'.$row['DATE_REG'].'">';
-		echo '<input type="submit" name="update_table" value="Update" >';
+		echo '<input type="submit" name="update_table" value="Update" ><br>';
+		echo '<br><br>';
+		echo '<input type="submit" name="delete_table" value="Delete" >';
 		echo '</form>';
 			}
 	}
@@ -58,9 +60,12 @@ if ($_POST['search']){
 	}
 	
 if ($_POST['update_table']){
-	$sql = "update USERS set USER_NAME='".$_POST['user_name']."' , PASSWORD='".$_POST['password']."' , CLASS='".$_POST['class']."' ,PERSON_ID='".$_POST['person_id']."', DATE_REGISTERED='".$_POST['date_reg']."' where USER_NAME=''";
+	$sql = "update USERS set PASSWORD='".$_POST['password']."' , CLASS='".$_POST['class']."' ,PERSON_ID='".$_POST['person_id']."', DATE_REGISTERED='".$_POST['date_reg']."' where USER_NAME='".$_POST['user_name']."'";
 	echo $sql;
-	
+	}
+if ($_POST['delete_table']){
+	$sql = "DELETE FROM USERS WHERE USER_NAME='".$_POST['user_name']."'";
+	echo $sql;
 	}
 ?>
 	</body>
