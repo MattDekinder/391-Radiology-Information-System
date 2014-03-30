@@ -4,8 +4,12 @@
 include('database.php');
 
 if(isset($_POST['logout'])){
+	$logout = FALSE;
 	session_start();
-	session_destroy();
+	$logout = session_destroy();
+	if($logout){
+		echo "logout successfull";
+		}
 	}     
 	
 //The user clicked the 'login' button

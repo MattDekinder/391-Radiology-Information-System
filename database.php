@@ -417,7 +417,7 @@ Returns an 2-dimensional associative array of the results.
 **Do not modify the search string such that the order of columns changes** */
 function query_search_exec ($sql){
 	$conn = connect();
-	$ret=false;
+	$ret;
 	if(($statement = oci_parse($conn, $sql)) == false){
 		$err = oci_error($statement);
 		echo htmlentities($err['message']);
@@ -437,9 +437,10 @@ if(!$exec){
 		$ret[$count] = $row;
 		$count = $count+1;
 	}
-	return $ret;
+	
 }
 oci_free_statement($statement);
 oci_close($conn);
+return $ret;
 }
 ?>

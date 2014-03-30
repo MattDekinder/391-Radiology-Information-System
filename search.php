@@ -28,7 +28,7 @@ function query_search ( $search_string ){
 	}
 	
 	if(!empty($_POST['EndDate'])){
-		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE>="."TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )"." or TEST_DATE>="."TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )".") and ";
+		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE<="."TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )"." or TEST_DATE<="."TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )".") and ";
 	}
 	
 	$sql_string_good = $sql_string_good."(";
@@ -43,9 +43,10 @@ function query_search ( $search_string ){
 	return $sql;
 }
 
-function query_images (){
+function query_images ($id){
 	$conn = connect();
-	//$sql = 
+	$ret_img;
+	$sql = "select IMAGE_ID from PACS_IMAGES where RECORD_ID='".$id."'";
 	if(($statement = oci_parse($conn, $sql)) == false){
 		$err = oci_error($statement);
 		echo htmlentities($err['message']);
@@ -61,14 +62,11 @@ function query_images (){
 	} else{
 
 		$count = 0;
-		while ($row = oci_fetch_assoc($statement)) {
-			$ret[$count] = $row;
-			$count = $count+1;
-		}
-		return $ret;
+		oci_fetch_all($statement,$ret_img);	
 	}
 	oci_free_statement($statement);
 	oci_close($conn);
+	return $ret_img;
 }
 
 
@@ -93,31 +91,27 @@ session_start();
             if(isset($_POST['search'])){
             	$search_string = (explode('and',strtolower(trim($_POST['keywords']))));
             	$SQL_String = query_search($search_string);
-					echo $SQL_String."<br>";
 					 echo $_SESSION['CLASS']."<br>";
                 echo $_SESSION['PERSON_ID']."<br>";
 					
 					if($_SESSION['CLASS']=='a') {
-						//administrators have no security on searches
-						echo $SQL_String."<br>";
+					//administrators have no security on searches
+					echo $SQL_String;
             	$ret = query_search_exec($SQL_String);
 					}
 					
 					if($_SESSION['CLASS']=='p') {
-						$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where PATIENT_ID = PERSON_ID and PATIENT_ID ='".$_SESSION['PERSON_ID']."'";
-echo $SQL_String."<br>";
+					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where PATIENT_ID = PERSON_ID and PATIENT_ID ='".$_SESSION['PERSON_ID']."'";
             	$ret = query_search_exec($SQL_String);
 					}
 					
 					if($_SESSION['CLASS']=='r') {
-						$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where RADIOLOGIST_ID = PERSON_ID and RADIOLOGIST_ID ='".$_SESSION['PERSON_ID']."'";
-echo $SQL_String."<br>";
+					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where RADIOLOGIST_ID = PERSON_ID and RADIOLOGIST_ID ='".$_SESSION['PERSON_ID']."'";
             	$ret = query_search_exec($SQL_String);
 					}
 					
 					if($_SESSION['CLASS']=='d') {
-						$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where DOCTOR_ID = PERSON_ID and DOCTOR_ID ='".$_SESSION['PERSON_ID']."'";
-						echo $SQL_String."<br>";
+					$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where DOCTOR_ID = PERSON_ID and DOCTOR_ID ='".$_SESSION['PERSON_ID']."'";
             	$ret = query_search_exec($SQL_String);
 					}
 
@@ -205,6 +199,17 @@ echo $SQL_String."<br>";
 			}
 		}
 		echo "</tr>";
+		$images = query_images($row['RECORD_ID']);
+		if(!empty($images)){
+			echo "<tr>";
+			foreach ($images as $col){
+				foreach ($col as $img){
+					echo "<th> ".$img." </th>";
+				}
+			}
+				echo "</tr>";
+			
+			}
 	}
 	?>
 </table>

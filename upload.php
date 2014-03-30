@@ -7,6 +7,7 @@ $rads = get_radiolog();
 
 $rad_id = $_SESSION["PERSON_ID"];
 echo "Radiologist ID: ".$rad_id;
+
 ?>
 
 <html>
@@ -44,6 +45,9 @@ echo "Radiologist ID: ".$rad_id;
 			<label>Description: </label> <br>
 			<textarea name="desc" rows="4" cols="50" maxlength="1023"></textarea> <br>
 			<input type="submit" name="create" value="Create Record">
+		</form>
+		<form name="back" method="post" action="search.php">
+		<input type="submit" name="back" value="Back">
 		</form>
 	</div>
 </body>
