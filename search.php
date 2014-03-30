@@ -24,11 +24,11 @@ function query_search ( $search_string ){
 	$sql_string_good = $sql_string_good.") SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from persons, radiology_record where person_id=patient_id and ";	
 	
 	if(!empty($_POST['StartDate'])){
-		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE>=".$_SESSION['start_date']." or TEST_DATE>=".$_SESSION['start_date'].") and ";
+		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE>="."TO_DATE('".$_POST['StartDate']."', 'YYYY-MM-DD' )"." or TEST_DATE>="."TO_DATE('".$_POST['StartDate']."', 'YYYY-MM-DD' )".") and ";
 	}
 	
 	if(!empty($_POST['EndDate'])){
-		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE>=".$_SESSION['end_date']." or TEST_DATE>=".$_SESSION['end_date'].") and ";
+		$sql_string_good = $sql_string_good."(PRESCRIBING_DATE>="."TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )"." or TEST_DATE>="."TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )".") and ";
 	}
 	
 	$sql_string_good = $sql_string_good."(";
@@ -41,38 +41,6 @@ function query_search ( $search_string ){
 	
 	$sql = $sql_string_good.$sql_string_good2;
 	return $sql;
-}
-
-
-/*recieves a sql search string and excecutes it in oracle.
-Returns an 2-dimensional associative array of the results.
-**Do not modify the search string such that the order of columns changes** */
-function query_search_exec ($sql){
-	$conn = connect();
-	$ret=false;
-	if(($statement = oci_parse($conn, $sql)) == false){
-		$err = oci_error($statement);
-		echo htmlentities($err['message']);
-		return FALSE;
-	}
-
-$exec = oci_execute($statement);
-
-if(!$exec){
-	$err = oci_error($statement);
-	echo htmlentities($err['message']);
-	return FALSE;
-} else{
-
-	$count = 0;
-	while ($row = oci_fetch_assoc($statement)) {
-		$ret[$count] = $row;
-		$count = $count+1;
-	}
-	return $ret;
-}
-oci_free_statement($statement);
-oci_close($conn);
 }
 
 function query_images (){
@@ -103,6 +71,7 @@ function query_images (){
 	oci_close($conn);
 }
 
+
 ini_set('display_errors',1);
 include('database.php');
 session_start();
@@ -116,25 +85,43 @@ session_start();
                 echo $_SESSION['EMAIL']."<br>";
                 echo $_SESSION['PHONE']."<br>";
             }*/
-//TODO: create security for classes and add dates to search. (for now administrator is assumed)
-
-            if(!isset($_SESSION['date_ranges'])){
-            	$_SESSION['date_ranges']=1;
-            }
+            
+       
+            
+// Security is defined in the following code: first, an sql query is generated. Then the query is wrapped in a security query and executed
 
             if(isset($_POST['search'])){
             	$search_string = (explode('and',strtolower(trim($_POST['keywords']))));
-            	$_SESSION['date_ranges']=1;
-
-	//$s_date = "TO_DATE('".$_POST['StartDate']."', 'YYYY-MM-DD' )";
-	//$e_date = "TO_DATE('".$_POST['EndDate']."', 'YYYY-MM-DD' )";
-            	$ret = query_search($search_string);
-
+            	$SQL_String = query_search($search_string);
+					echo $SQL_String."<br>";
+					 echo $_SESSION['CLASS']."<br>";
+                echo $_SESSION['PERSON_ID']."<br>";
+					
+					if($_SESSION['CLASS']=='a') {
+						//administrators have no security on searches
+						echo $SQL_String."<br>";
+            	$ret = query_search_exec($SQL_String);
+					}
+					
+					if($_SESSION['CLASS']=='p') {
+						$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where PATIENT_ID = PERSON_ID and PATIENT_ID ='".$_SESSION['PERSON_ID']."'";
+echo $SQL_String."<br>";
+            	$ret = query_search_exec($SQL_String);
+					}
+					
+					if($_SESSION['CLASS']=='r') {
+						$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where RADIOLOGIST_ID = PERSON_ID and RADIOLOGIST_ID ='".$_SESSION['PERSON_ID']."'";
+echo $SQL_String."<br>";
+            	$ret = query_search_exec($SQL_String);
+					}
+					
+					if($_SESSION['CLASS']=='d') {
+						$SQL_String = "select SCORE,RECORD_ID,PATIENT_ID,DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String."), users where DOCTOR_ID = PERSON_ID and DOCTOR_ID ='".$_SESSION['PERSON_ID']."'";
+						echo $SQL_String."<br>";
+            	$ret = query_search_exec($SQL_String);
+					}
 
             } 
-            if(isset($_POST['add_dates'])){
-            	$_SESSION['date_ranges'] =$_SESSION['date_ranges']+1;
-            }	
 
             else{  }
 
@@ -154,6 +141,9 @@ session_start();
             	</div>
             	<div id="space"></div>
             	<div class="center">
+            	<form name="logout" method="post" action="http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/login.php" id="logout">
+            			<input type="submit" name="logout" value="logout">
+            		</form>
             	<?php if($_SESSION['CLASS'] == 'r') { ?>
             		<form action="http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/upload.php">
             			<input type="submit" value="Upload">
@@ -204,7 +194,7 @@ session_start();
 		<th>Prescribing Date</th>
 		<th>Test Date</th>
 		<th>Diagnosis</th>
-		<th>Prescribing Date</th>
+		<th>Description</th>
 	</tr>
 	<?php 
 	foreach ($ret as $row){

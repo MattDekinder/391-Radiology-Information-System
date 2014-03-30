@@ -3,12 +3,16 @@
 //Include database functions
 include('database.php');
 
+if(isset($_POST['logout'])){
+	session_start();
+	session_destroy();
+	}     
+	
 //The user clicked the 'login' button
 if($login = isset($_POST['login'])){
 
 //Will not execute a query on an empty password or username field
 	if(empty($_POST['uname']) || empty($_POST['upass'])){
-
 	} else{
 		$result = query_login($_POST['uname'], $_POST['upass']);
 

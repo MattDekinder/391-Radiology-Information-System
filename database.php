@@ -412,4 +412,34 @@ function exec_count($sql, $date, $start, $end){
 	return $count;
 
 }
+/*recieves a sql search string and excecutes it in oracle.
+Returns an 2-dimensional associative array of the results.
+**Do not modify the search string such that the order of columns changes** */
+function query_search_exec ($sql){
+	$conn = connect();
+	$ret=false;
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		return FALSE;
+	}
+
+$exec = oci_execute($statement);
+
+if(!$exec){
+	$err = oci_error($statement);
+	echo htmlentities($err['message']);
+	return FALSE;
+} else{
+
+	$count = 0;
+	while ($row = oci_fetch_assoc($statement)) {
+		$ret[$count] = $row;
+		$count = $count+1;
+	}
+	return $ret;
+}
+oci_free_statement($statement);
+oci_close($conn);
+}
 ?>
