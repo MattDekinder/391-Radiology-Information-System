@@ -207,7 +207,6 @@ session_start();
 					echo "<th>";
 					echo '<p> <a href="image_reg.php?id='.$img.'"target="_blank">';
 					echo '<img src="thumb.php?id='.$img.'">';
-					echo '';
 					echo "</a> </p> </th>";
 					
 				}
