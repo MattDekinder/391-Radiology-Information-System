@@ -16,7 +16,7 @@ session_start();
 				<input type="submit" name="search" value="Search D_ID"><br>
 			</form>
 		<label>Assign new Family Doctor:</label><br>
-		<form method="post" action="new_user.php">
+		<form method="post" action="man_doctors.php">
 			<label>Doctor ID </label>
 			<input type="text" name="D_ID"><br>
 			<label>Patient ID </label>
@@ -34,7 +34,7 @@ if ($_POST['search']){
 	$ret = query_search_exec($sql);
 	if (!empty($ret)){
 	foreach($ret as $row){
-		echo '<form action="man_users.php" method="post">';
+		echo '<form action="man_doctors.php" method="post">';
 		echo '<input type="text" name="user_name" value="'.$row['USER_NAME'].'">';
 		echo '<input type="text" name="password" value="'.$row['PASSWORD'].'">';
 		echo '<input type="submit" name="update_table" value="Update" ><br>';

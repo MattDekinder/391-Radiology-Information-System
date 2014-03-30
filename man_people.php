@@ -10,24 +10,17 @@ session_start();
 </head>
 	<body>
 		<div class="center">
-		<label>search user:</label> 
+		<label>search doctor ID:</label> 
 			<form action="man_users.php" method="post">
-				<input type="text" name="username">
-				<input type="submit" name="search" value="Search User"><br>
+				<input type="text" name="D_ID">
+				<input type="submit" name="search" value="Search D_ID"><br>
 			</form>
-		<label>Create New User:</label>
-		<form method="post" action="new_user.php">
-			<label>Username: </label>
-			<input type="text" name="username"><br>
-			<label>Password: </label>
-			<input type="text" name="password"><br>
-			<label>User Type: </label>
-			<select name="utype" value="a">
-				<option value="p">Patient</option>
-				<option value="r">Radiologist</option>
-				<option value="d">Doctor</option>
-				<option value="a">Administrator</option>
-			</select><br>
+		<label>Assign new Family Doctor:</label><br>
+		<form method="post" action="man_doctors.php">
+			<label>Doctor ID </label>
+			<input type="text" name="D_ID"><br>
+			<label>Patient ID </label>
+			<input type="text" name="P_ID"><br>
 			<input type="submit" name="makenew" value="Create">
 		</form>
 		<form action="manage.php">
@@ -41,17 +34,14 @@ if ($_POST['search']){
 	$ret = query_search_exec($sql);
 	if (!empty($ret)){
 	foreach($ret as $row){
-		echo '<form action="man_users.php" method="post">';
+		echo '<form action="man_doctors.php" method="post">';
 		echo '<input type="text" name="user_name" value="'.$row['USER_NAME'].'">';
 		echo '<input type="text" name="password" value="'.$row['PASSWORD'].'">';
-		echo '<input type="text" name="class" value="'.$row['CLASS'].'">';
-		echo '<input type="text" name="person_id" value="'.$row['PERSON_ID'].'">';
-		echo '<input type="date" name="date_reg" value="'.$row['DATE_REG'].'">';
 		echo '<input type="submit" name="update_table" value="Update" ><br>';
 		echo '<br><br>';
 		echo '<input type="submit" name="delete_table" value="Delete" >';
 		echo '</form>';
-		echo '<br><br>';
+		echo '<br><br><br>';
 			}
 	}
 	}
