@@ -10,17 +10,25 @@ session_start();
 </head>
 	<body>
 		<div class="center">
-		<label>search doctor ID:</label> 
-			<form action="man_users.php" method="post">
-				<input type="text" name="D_ID">
-				<input type="submit" name="search" value="Search D_ID"><br>
+		<label>search Person ID:</label> 
+			<form action="man_people.php" method="post">
+				<input type="text" name="Person_ID">
+				<input type="submit" name="search" value="Search"><br>
 			</form>
-		<label>Assign new Family Doctor:</label><br>
-		<form method="post" action="man_doctors.php">
-			<label>Doctor ID </label>
-			<input type="text" name="D_ID"><br>
-			<label>Patient ID </label>
+		<label>Add new Person:</label><br>
+		<form method="post" action="man_people.php">
+			<label>Person ID </label>
 			<input type="text" name="P_ID"><br>
+			<label>First Name</label>
+			<input type="text" name="first_name"><br>
+			<label>Last Name</label>
+			<input type="text" name="last_name"><br>
+			<label>Address</label>
+			<input type="text" name="address"><br>
+			<label>Email</label>
+			<input type="text" name="email"><br>
+			<label>Phone</label>
+			<input type="text" name="phone"><br>
 			<input type="submit" name="makenew" value="Create">
 		</form>
 		<form action="manage.php">
@@ -34,7 +42,7 @@ if ($_POST['search']){
 	$ret = query_search_exec($sql);
 	if (!empty($ret)){
 	foreach($ret as $row){
-		echo '<form action="man_doctors.php" method="post">';
+		echo '<form action="man_people.php" method="post">';
 		echo '<input type="text" name="user_name" value="'.$row['USER_NAME'].'">';
 		echo '<input type="text" name="password" value="'.$row['PASSWORD'].'">';
 		echo '<input type="submit" name="update_table" value="Update" ><br>';
