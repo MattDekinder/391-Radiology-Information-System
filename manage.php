@@ -1,9 +1,12 @@
+
+
+
 <html>
-<head
+<head>
 <link rel="stylesheet" type="text/css" href="style.css">
+
 </head>
 <body>
-<!-- update or create users, persons, family_doctor-->
 <div class="center">
 <form action="man_users.php">
 <input type="submit" name="userman" value="Manage Users">
@@ -13,6 +16,9 @@
 </form>
 <form action="man_doctors.php">
 <input type="submit" name="doctorman" value="Manage Doctors">
+</form>
+<form action="search.php">
+	<input type="submit" name="back" value="Back" >
 </form>
 </div>
 </body>
