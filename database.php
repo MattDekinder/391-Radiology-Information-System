@@ -98,7 +98,7 @@ function query_password_change($user, $oldpass, $newpass){
 			oci_close($conn);
 			return FALSE;
 		}
-		//oci_commit($conn);
+		oci_commit($conn); //__________________________________________---------------------------------------------------------------------
 		oci_free_statement($statement);
 		oci_close($conn);
 		return TRUE;
@@ -224,7 +224,7 @@ function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $dia
 		oci_close($conn);
 		return FALSE;
 	}
-	//oci_commit($conn);
+	//oci_commit($conn);//_______________________________-----------------------------------------------------------------------------------------------
 	oci_free_statement($statement);
 	oci_close($conn);
 }
@@ -467,6 +467,6 @@ function insert_update_exec($sql){
 
 	oci_free_statement($statement);
 	oci_close($conn);
-	echo "Success";
+	echo "Success ";
 }
 ?>

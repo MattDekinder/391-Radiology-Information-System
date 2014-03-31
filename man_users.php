@@ -10,10 +10,10 @@ session_start();
 </head>
 	<body>
 		<div class="center">
-		<label>search user:</label> 
+		<label>search user's person ID:</label> 
 			<form action="man_users.php" method="post">
-				<input type="text" name="username">
-				<input type="submit" name="search" value="Search User"><br>
+				<input type="text" name="person_id">
+				<input type="submit" name="search" value="Search"><br>
 			</form>
 		<label>Create New User:</label><br>
 		<form method="post" action="man_users.php">
@@ -41,8 +41,8 @@ session_start();
 		
 <?php
 if ($_POST['search']){
-	if(!empty($_POST['username'])) {
-	$sql = "select USER_NAME, PASSWORD, CLASS, PERSON_ID, TO_CHAR(DATE_REGISTERED, 'YYYY-MM-DD') as DATE_REG from USERS where USER_NAME ='".$_POST['username']."'";
+	if(!empty($_POST['person_id'])) {
+	$sql = "select USER_NAME, PASSWORD, CLASS, PERSON_ID, TO_CHAR(DATE_REGISTERED, 'YYYY-MM-DD') as DATE_REG from USERS where PERSON_ID ='".$_POST['person_id']."'";
 	$ret = query_search_exec($sql);
 	if (!empty($ret)){
 	foreach($ret as $row){
@@ -61,7 +61,7 @@ if ($_POST['search']){
 	}
 	}
 	else {
-		echo "No username entered";
+		echo "No user ID entered";
 		}
 }
 
