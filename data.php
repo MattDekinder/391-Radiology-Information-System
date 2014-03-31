@@ -345,7 +345,7 @@ if(isset($_POST['sub'])){
 			
 			// If we are not reoperating (drilling up or rowling down) we construct the string from scratch
 			if(!$reop){
-				$s = "COUNT OF RECORDS";
+				$s = "COUNT OF IMAGES";
 
 				if(!$nblank){
 					$s.= ": ";
@@ -393,7 +393,7 @@ if(isset($_POST['sub'])){
 
 			}
 
-			echo "<label>".$s.$count." RECORD(S) FOUND.</label><br>";
+			echo "<label>".$s.$count." IMAGE(S) FOUND.</label><br>";
 			if($isdate){
 				?>
 				<form action="data.php" method ='post'>
