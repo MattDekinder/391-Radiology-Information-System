@@ -488,6 +488,9 @@ oci_close($conn);
 return $ret;
 }
 
+/*
+
+*/
 function insert_update_exec($sql){
 	$conn = connect();
 
