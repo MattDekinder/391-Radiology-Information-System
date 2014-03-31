@@ -56,7 +56,7 @@ if($login = isset($_POST['login'])){
 				<h1 class="header">Login</h1>
 				<form name="user_login" method="post" action="login.php">
 					Username : <input type="text" name="uname"> <br>
-					Password : <input type="text" name="upass"> <br>
+					Password : <input type="password" name="upass"> <br>
 					<input type="submit" name="login" value="Login">
 					<input type="submit" name="change" value="Change Password">
 				</form>
