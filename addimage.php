@@ -20,7 +20,6 @@ if(isset($_POST['create'])){
 
 }
 
-
 if($second = isset($_POST['upload'])){
 
 	// Reloads $rid from POST data
@@ -48,7 +47,9 @@ if(isset($_POST['done'])){
 </head>
 <body>
 	<div class="center">
-		<?php if($second){ ?> 
+		<?php 
+		// If an image has already been added, display
+		if($second){ ?> 
 		<label>Add Another Image?</label> <br/> 
 		<?php } ?>
 		<form name="addimage" method="post" action="addimage.php" enctype="multipart/form-data">
