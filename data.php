@@ -298,6 +298,7 @@ if(isset($_POST['sub'])){
 	<LINK rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
+		<a href="dataanalysis.html"target="_blank">Help</a>
 		<div class="center">
 			<form action="data.php" method="post">
 				<label>Date: </label>
@@ -398,7 +399,7 @@ if(isset($_POST['sub'])){
 			if($isdate){
 				?>
 				<form action="data.php" method ='post'>
-				<!-- Hidden metadata to allow for requerying-->
+					<!-- Hidden metadata to allow for requerying-->
 					<input type="hidden" name="s1" value="<?php echo $s1 ?>">
 					<input type="hidden" name="s2" value="<?php echo $s2 ?>">
 					<input type="hidden" name="s3" value="<?php echo $s3 ?>">

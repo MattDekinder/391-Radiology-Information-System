@@ -47,6 +47,7 @@ if(isset($_POST['done'])){
 	</head>
 </head>
 <body>
+	<a href="recordupload.html"target="_blank">Help</a>
 	<div class="center">
 		<?php 
 		// If an image has already been added, display

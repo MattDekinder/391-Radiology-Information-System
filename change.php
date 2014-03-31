@@ -31,6 +31,7 @@ if(isset($_GET['uname'])){
 </head>
 
 <body>
+<a href="loginchange.html"target="_blank">Help</a>
   <div class="center">
     <form name="changep" method="post" action="change.php" id="changep">
       <label>Username :</label> 

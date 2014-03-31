@@ -116,6 +116,7 @@ else{  }
 </head>
 
 <body>
+    <a href="search.html"target="_blank">Help</a>
 	<div id="topbar">
 		<label><?php echo $_SESSION['FIRST_NAME']." "; echo $_SESSION['LAST_NAME']; ?></label>
 		<label id="uname">(<?php echo $_SESSION['USER_NAME'] ?>)</label>

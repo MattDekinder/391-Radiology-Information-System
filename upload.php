@@ -18,6 +18,7 @@ $rad_id = $_SESSION["PERSON_ID"];
 	<LINK rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+	<a href="recordupload.html"target="_blank">Help</a>
 	<div class="center">
 		<form name="new_record" method="post" action="addimage.php">
 			<label>Patient: </label>

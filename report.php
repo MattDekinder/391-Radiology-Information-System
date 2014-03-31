@@ -36,6 +36,7 @@ if(isset($_POST['back'])){
 	<LINK rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
+		<a href="reportgenerate.html"target="_blank">Help</a>
 		<div class="center">
 			<form action="report.php" method="post">
 				<label>Start Date: </label>

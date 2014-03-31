@@ -55,6 +55,7 @@ if($login = isset($_POST['login'])){
 		<LINK rel="stylesheet" type="text/css" href="style.css">
 		</head>
 		<body>
+			<a href="loginchange.html"target="_blank">Help</a>
 			<div class="center">
 				<h1 class="header">Login</h1>
 				<form name="user_login" method="post" action="login.php">
