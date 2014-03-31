@@ -1,12 +1,15 @@
 <?php
 include('database.php'); 
 session_start();
-$patients = get_patients();
-$doctors = get_doctors();
-$rads = get_radiolog();
 
+// Gets all possiable patients
+$patients = get_patients();
+
+// Gets all possiable doctors
+$doctors = get_doctors();
+
+// Person doing this MUST be the radiologist
 $rad_id = $_SESSION["PERSON_ID"];
-echo "Radiologist ID: ".$rad_id;
 
 ?>
 
@@ -20,6 +23,7 @@ echo "Radiologist ID: ".$rad_id;
 			<label>Patient: </label>
 			<select name="patient">
 				<?php
+				// Displays selectable patients. 
 				foreach ($patients as $patient) {
 					echo '<option value="'.$patient['PERSON_ID'].'" >'.$patient['LAST_NAME'].", ".$patient["FIRST_NAME"].'</option>';
 				}?>
@@ -28,6 +32,7 @@ echo "Radiologist ID: ".$rad_id;
 			<label>Doctor: </label>
 			<select name="doctor">
 				<?php
+				// Displays possiable selectable doctors
 				foreach ($doctors as $doc) {
 					echo '<option value="'.$doc['PERSON_ID'].'" >'.$doc['LAST_NAME'].", ".$doc["FIRST_NAME"].'</option>';
 				}?>

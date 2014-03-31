@@ -1,4 +1,8 @@
 <?php
+/*
+Simple script that takes an image id using the GET protocol and returns the thumbnail size image. For
+use in <img> tags in html.
+*/
 include("database.php");
 
 if(isset($_GET['id'])){

@@ -17,12 +17,15 @@ if($login = isset($_POST['login'])){
 
 //Will not execute a query on an empty password or username field
 	if(empty($_POST['uname']) || empty($_POST['upass'])){
+		// Do nothing at the moment
 	} else{
 		$result = query_login($_POST['uname'], $_POST['upass']);
 
-//Is only valid if user entered correct uname and pass
+		//Is only valid if user entered correct uname and pass
 		if($result['valid']){
 			session_start();
+
+			// Assigns all session data
 			$_SESSION['USER_NAME'] = $result['info']['USER_NAME'];
 			$_SESSION['CLASS'] = $result['info']['CLASS'];
 			$_SESSION['PERSON_ID'] = $result['info']['PERSON_ID'];
@@ -35,8 +38,11 @@ if($login = isset($_POST['login'])){
 			header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/search.php");
 		}
 	}
+
 //The user clicked the 'change password' button
 } elseif(isset($_POST['change'])) {
+
+	// Go to change script with username as url field (GET)
 	header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/change.php?uname=".$_POST['uname']);
 }
 ?>
