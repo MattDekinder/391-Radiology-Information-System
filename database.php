@@ -191,7 +191,7 @@ function get_radiolog(){
 		echo htmlentities($err['message']);
 		oci_close($conn);
 		return FALSE;
-	}ake_reake_re
+	}
 
 	$count = 0;
 
