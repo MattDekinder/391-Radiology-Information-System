@@ -1,4 +1,8 @@
 <?php
+
+/*
+Function for connecting to oracle database. Returns connection id.
+*/
 function connect(){
 
 	//Connects to my Oracle username
@@ -15,6 +19,10 @@ function connect(){
 	return $connection;
 }
 
+
+/*
+Function to confirm a valid username-password login. Returns an Array. 
+*/
 function query_login($user, $pass){
 	$conn = connect();
 	$sql = "select * from users u join persons p on u.person_id=p.person_id where user_name='".$user."' and password='".$pass."'";
@@ -49,6 +57,10 @@ function query_login($user, $pass){
 	return $ret;
 }
 
+/*
+A function to both authenticate a username and change that usernames password. 
+Returns false on failure, true otherwise. 
+*/
 function query_password_change($user, $oldpass, $newpass){
 	$conn = connect();
 	$sql = "select * from users where user_name='".$user."' and password='".$oldpass."'";
@@ -108,6 +120,9 @@ function query_password_change($user, $oldpass, $newpass){
 	} 
 }
 
+/*
+Gets an array of all patients, with last name, first name, and person id. 
+*/
 function get_patients(){
 	$conn = connect();
 	$sql = "select u.person_id, first_name, last_name from persons p join users u on p.person_id=u.person_id where u.CLASS='p'";
@@ -140,6 +155,10 @@ function get_patients(){
 	return $ret;
 }
 
+
+/*
+Gets an array of all doctors, with last name, first name, and person id. 
+*/
 function get_doctors(){
 	$conn = connect();
 	$sql = "select u.person_id, first_name, last_name from persons p join users u on p.person_id=u.person_id where u.CLASS='d'";
@@ -172,6 +191,10 @@ function get_doctors(){
 	return $ret;
 }
 
+
+/*
+Gets an array of all radiologists, with last name, first name, and person id. 
+*/
 function get_radiolog(){
 	$conn = connect();
 	$sql = "select u.person_id, first_name, last_name from persons p join users u on p.person_id=u.person_id where u.CLASS='r'";
@@ -204,6 +227,9 @@ function get_radiolog(){
 	return $ret;
 }
 
+/*
+Constructs and inserts a new radiology record to oracle.
+*/
 function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $diag, $desc){
 	$conn = connect();
 	$sql = "insert into radiology_record values (".(string)$id.", ".(string)$patient.", ".(string)$doctor.", ".(string)$rad.", '".(string)$type."', TO_DATE('".(string)$p_date."', 'YYYY-MM-DD'), TO_DATE('".(string)$t_date."', 'YYYY-MM-DD'), '".(string)$diag."', '".(string)$desc."')";
@@ -229,6 +255,9 @@ function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $dia
 	oci_close($conn);
 }
 
+/*
+Returns a cound of the number of rows in a table, given by parameter. 
+*/
 function rows_count($table){
 	$conn = connect();
 	$sql = "select count(*) as C from ".$table;//radiology_record
@@ -260,6 +289,9 @@ function rows_count($table){
 	return $ret;
 }
 
+/*
+Adds specified image file to table, referencing the given record id in radiology records. 
+*/
 function add_image($file, $rid){
 
 	//Image id for the new image
@@ -341,6 +373,9 @@ function add_image($file, $rid){
 	oci_free_statement($statement);
 }
 
+/*
+Gets an array of all test types.
+*/
 function get_test_types(){
 
 	$conn = connect();
@@ -376,11 +411,18 @@ function get_test_types(){
 
 }
 
+/*
+Function to execute the given count statement, for data analysis. 
+Takes an aprapriate sql query, an boolean date value, and optional 
+start and end dates. 
+*/
 function exec_count($sql, $date, $start, $end){
 	$conn = connect();
 
+	// The string ?----? was a stand in for the date. Split the $sql statement on these. 
 	if($date){
 		$query_array = explode("?----?", $sql);
+		//Rebuild the query with newly included dates. 
 		$sql = $query_array[0].$start.$query_array[1].$end.$query_array[2];
 	}
 
@@ -390,8 +432,6 @@ function exec_count($sql, $date, $start, $end){
 		oci_close($conn);
 		return FALSE;
 	}
-
-
 
 	$exec = oci_execute($statement);
 
@@ -413,9 +453,12 @@ function exec_count($sql, $date, $start, $end){
 	return $count;
 
 }
-/*recieves a sql search string and excecutes it in oracle.
-Returns an 2-dimensional associative array of the results.
-**Do not modify the search string such that the order of columns changes** */
+
+/*
+Recieves a sql search string and excecutes it in oracle.
+Returns a 2-dimensional associative array of the results.
+*/
+/* **Do not modify the search string such that the order of columns changes** */
 function query_search_exec ($sql){
 	$conn = connect();
 	$ret;
