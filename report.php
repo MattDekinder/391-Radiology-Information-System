@@ -45,7 +45,7 @@ if(isset($_POST['back'])){
 				<input type="text" name="diagnosis"> 
 				<input type="submit" name="sub">
 				<input type="submit" name="back" value="Back">
-			</form>	
+			</form>
 		</div>
 		<div id="space"></div>
 		</body>

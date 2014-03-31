@@ -85,6 +85,7 @@ session_start();
 					if($_SESSION['CLASS']=='a') {
 					//administrators have no security on searches
             	$ret = query_search_exec($SQL_String);
+            	
 					}
 					
 					if($_SESSION['CLASS']=='p') {
