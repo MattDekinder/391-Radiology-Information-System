@@ -121,7 +121,7 @@ if(isset($_POST['sub'])){
 	}
 
 	// The base query. 
-	$sql = "select count(*) as C from radiology_record ";
+	$sql = "select count(*) as C from radiology_record r join pacs_images i on r.record_id=i.record_id ";
 
 
 	// If there are further stipulations then a where clause is needed.
