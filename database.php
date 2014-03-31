@@ -489,7 +489,7 @@ return $ret;
 }
 
 /*
-
+Executes the given sql string without result. 
 */
 function insert_update_exec($sql){
 	$conn = connect();
