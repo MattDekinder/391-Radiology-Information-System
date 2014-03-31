@@ -35,6 +35,7 @@ if($login = isset($_POST['login'])){
 			$_SESSION['EMAIL'] = $result['info']['EMAIL'];
 			$_SESSION['PHONE'] = $result['info']['PHONE'];
 
+			// Moves on to search
 			header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/search.php");
 		}
 	}
