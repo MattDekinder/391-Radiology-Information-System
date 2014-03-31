@@ -43,11 +43,17 @@ if ($_POST['search']){
 	if (!empty($ret)){
 	foreach($ret as $row){
 		echo '<form action="man_people.php" method="post">';
+		echo '<label>Person ID: </label>';
 		echo '<input type="text" readonly="readonly" name="person_id" value="'.$row['PERSON_ID'].'">';
+		echo '<label>First Name: </label>';
 		echo '<input type="text" name="first_name" value="'.$row['FIRST_NAME'].'">';
-		echo '<input type="text" name="last_name" value="'.$row['LAST_NAME'].'">';
+		echo '<label>Last Name: </label>';
+		echo '<input type="text" name="last_name" value="'.$row['LAST_NAME'].'"><br>';
+		echo '<label>Address: </label>';
 		echo '<input type="text" name="address" value="'.$row['ADDRESS'].'">';
+		echo '<label>Email: </label>';
 		echo '<input type="text" name="email" value="'.$row['EMAIL'].'">';
+		echo '<label>Phone: </label>';
 		echo '<input type="text" name="phone" value="'.$row['PHONE'].'">';
 		echo '<input type="submit" name="update_table" value="Update" ><br>';
 		echo '<br><br>';

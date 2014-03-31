@@ -47,10 +47,15 @@ if ($_POST['search']){
 	if (!empty($ret)){
 	foreach($ret as $row){
 		echo '<form action="man_users.php" method="post">';
+		echo '<label>User Name: </label>';
 		echo '<input readonly="readonly" name="user_name" value="'.$row['USER_NAME'].'">';
+		echo '<label>Password: </label>';
 		echo '<input type="text" name="password" value="'.$row['PASSWORD'].'">';
+		echo '<label>Class: </label>';
 		echo '<input type="text" name="class" value="'.$row['CLASS'].'">';
+		echo '<label>Person ID: </label>';
 		echo '<input type="text" name="person_id" value="'.$row['PERSON_ID'].'">';
+		echo '<label>Date Registered: </label>';
 		echo '<input type="date" name="date_reg" value="'.$row['DATE_REG'].'">';
 		echo '<input type="submit" name="update_table" value="Update" ><br>';
 		echo '<br><br>';
