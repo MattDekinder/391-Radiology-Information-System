@@ -73,19 +73,16 @@ if ($_POST['search']){
 if ($_POST['makenew']){
 	$sql = "insert into USERS values('".$_POST['username']."', '".$_POST['password']."' , '".$_POST['utype']."' ,'".$_POST['person_id']."', to_date('".$_POST['date_reg']."','YYYY-MM-DD'))";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}	
 	
 if ($_POST['update_table']){
 	$sql = "update USERS set PASSWORD='".$_POST['password']."' , CLASS='".$_POST['class']."' ,PERSON_ID='".$_POST['person_id']."', DATE_REGISTERED=to_date('".$_POST['date_reg']."','YYYY-MM-DD') where USER_NAME='".$_POST['user_name']."'";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}
 	
 if ($_POST['delete_table']){
 	$sql = "DELETE FROM USERS WHERE USER_NAME='".$_POST['user_name']."'";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}
 ?>
 	</body>

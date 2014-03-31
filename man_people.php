@@ -69,18 +69,15 @@ if ($_POST['search']){
 if ($_POST['makenew']){
 	$sql = "insert into PERSONS values('".$_POST['person_id']."','".$_POST['first_name']."', '".$_POST['last_name']."' , '".$_POST['address']."' ,'".$_POST['email']."', '".$_POST['phone']."')";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}	
 	
 if ($_POST['update_table']){
 	$sql = "update PERSONS set FIRST_NAME='".$_POST['first_name']."' , LAST_NAME='".$_POST['last_name']."' ,ADDRESS='".$_POST['address']."', EMAIL='".$_POST['email']."',PHONE='".$_POST['phone']."' where PERSON_ID='".$_POST['person_id']."'";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}
 if ($_POST['delete_table']){
 	$sql = "DELETE FROM PERSONS WHERE PERSON_ID='".$_POST['person_id']."'";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}
 ?>
 	</body>

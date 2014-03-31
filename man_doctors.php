@@ -51,13 +51,11 @@ if ($_POST['search']){
 if ($_POST['makenew']){
 	$sql = "insert into FAMILY_DOCTOR values('".$_POST['doctor_id']."','".$_POST['patient_id']."')";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}	
 	
 if ($_POST['delete_table']){
 	$sql = "DELETE FROM FAMILY_DOCTOR WHERE DOCTOR_ID='".$_POST['doctor_id']."' and PATIENT_ID='".$_POST['patient_id']."'";
 	insert_update_exec($sql);
-	insert_update_exec('commit');
 	}
 ?>
 	</body>

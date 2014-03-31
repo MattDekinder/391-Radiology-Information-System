@@ -250,7 +250,7 @@ function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $dia
 		oci_close($conn);
 		return FALSE;
 	}
-	//oci_commit($conn);//_______________________________-----------------------------------------------------------------------------------------------
+	oci_commit($conn);//_______________________________-----------------------------------------------------------------------------------------------
 	oci_free_statement($statement);
 	oci_close($conn);
 }
@@ -510,7 +510,7 @@ function insert_update_exec($sql){
 		oci_close($conn);
 		return FALSE;
 	}
-
+	oci_commit($conn);
 	oci_free_statement($statement);
 	oci_close($conn);
 	echo "Success ";
