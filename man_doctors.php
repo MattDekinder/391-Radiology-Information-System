@@ -30,14 +30,15 @@ session_start();
 		<?php
 if ($_POST['search']){
 	if(!empty($_POST['doctor_id'])) {
-	$sql = "select DOCTOR_ID, PERSON_ID from FAMILY_DOCTOR where DOCTOR_ID ='".$_POST['doctor_id']."'";
+	$sql = "select DOCTOR_ID, PATIENT_ID from FAMILY_DOCTOR where DOCTOR_ID ='".$_POST['doctor_id']."'";
 	$ret = query_search_exec($sql);
 	if (!empty($ret)){
 	foreach($ret as $row){
-		echo '<form action="man_people.php" method="post">';
-		echo '<input type="text" name="doctor_id" value="'.$row['DOCTOR_ID'].'">';
-		echo '<input type="text" name="patient_id" value="'.$row['PATIENT_ID'].'">';
-		echo '<br><br>';
+		echo '<form action="man_doctors.php" method="post">';
+		echo '<label>Doctor ID: </label><br>';
+		echo '<input type="text" readonly="readonly" name="doctor_id" value="'.$row['DOCTOR_ID'].'"><br>';
+		echo '<label>Patient ID: </label><br>';
+		echo '<input type="text" readonly="readonly" name="patient_id" value="'.$row['PATIENT_ID'].'">';
 		echo '<input type="submit" name="delete_table" value="Delete" >';
 		echo '</form>';
 		echo '<br><br><br>';
@@ -54,7 +55,7 @@ if ($_POST['makenew']){
 	}	
 	
 if ($_POST['delete_table']){
-	$sql = "DELETE FROM FAMILY_DOCTOR WHERE DOCTOR_ID='".$_POST['doctor_id']."'";
+	$sql = "DELETE FROM FAMILY_DOCTOR WHERE DOCTOR_ID='".$_POST['doctor_id']."' and PATIENT_ID='".$_POST['patient_id']."'";
 	insert_update_exec($sql);
 	insert_update_exec('commit');
 	}

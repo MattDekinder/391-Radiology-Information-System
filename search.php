@@ -79,12 +79,11 @@ session_start();
             if(isset($_POST['search'])){
             	$search_string = (explode('and',strtolower(trim($_POST['keywords']))));
             	$SQL_String = query_search($search_string);
-					 echo $_SESSION['CLASS']."<br>";
-                echo $_SESSION['PERSON_ID']."<br>";
+					 //echo $_SESSION['CLASS']."<br>";
+               // echo $_SESSION['PERSON_ID']."<br>";
 					
 					if($_SESSION['CLASS']=='a') {
 					//administrators have no security on searches
-					echo $SQL_String;
             	$ret = query_search_exec($SQL_String);
 					}
 					
@@ -100,7 +99,6 @@ session_start();
 					
 					if($_SESSION['CLASS']=='d') {
 					$SQL_String = "select SCORE,RECORD_ID,s.PATIENT_ID,s.DOCTOR_ID,RADIOLOGIST_ID,TEST_TYPE,PRESCRIBING_DATE,TEST_DATE,DIAGNOSIS,DESCRIPTION from (".$SQL_String.") s join FAMILY_DOCTOR d on s.PATIENT_ID=d.PATIENT_ID where d.DOCTOR_ID ='".$_SESSION['PERSON_ID']."'";
-					echo $SQL_String;
             	$ret = query_search_exec($SQL_String);
 					}
 

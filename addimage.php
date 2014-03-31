@@ -2,7 +2,8 @@
 
 //Comment back in to re-enable uploading of records
 include("database.php");
-
+ini_set('display_errors',1); 
+error_reporting(E_ALL);
 session_start();
 
 
@@ -25,7 +26,7 @@ if($second = isset($_POST['upload'])){
 } 
 
 if(isset($_POST['done'])){
-	header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/search.php");
+	header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/search.php");
 }
 ?>
 <html>
