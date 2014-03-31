@@ -17,6 +17,7 @@ if(isset($_GET['uname'])){
 
   // If status is true (change worked), go back to login
 	if($status){
+    //header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/login.php");
 		header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/login.php");
 
 	}

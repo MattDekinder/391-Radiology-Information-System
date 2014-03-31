@@ -36,7 +36,8 @@ if($login = isset($_POST['login'])){
 			$_SESSION['PHONE'] = $result['info']['PHONE'];
 
 			// Moves on to search
-			header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/search.php");
+			//header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/search.php");
+			header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/search.php");
 		}
 	}
 
@@ -44,7 +45,8 @@ if($login = isset($_POST['login'])){
 } elseif(isset($_POST['change'])) {
 
 	// Go to change script with username as url field (GET)
-	header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/change.php?uname=".$_POST['uname']);
+	//header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/change.php?uname=".$_POST['uname']);
+	header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/change.php?uname=".$_POST['uname']);
 }
 ?>
 <http>

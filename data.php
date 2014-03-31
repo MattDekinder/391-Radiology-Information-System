@@ -6,7 +6,8 @@ include('database.php');
 
 //Go to search.php upon pressing of the 'back' button
 if(isset($_POST['back'])){
-	header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/search.php");
+	//header("Location: http://consort.cs.ualberta.ca/~dekinder/website/391-Radiology-Information-System/search.php");
+	header("Location: http://consort.cs.ualberta.ca/~esinglet/website/391-Radiology-Information-System/search.php");
 }
 
 //true if a count is returned. 
