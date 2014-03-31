@@ -97,7 +97,8 @@ function query_password_change($user, $oldpass, $newpass){
 			echo htmlentities($err['message']);
 			oci_close($conn);
 			return FALSE;
-		} 
+		}
+		//oci_commit($conn);
 		oci_free_statement($statement);
 		oci_close($conn);
 		return TRUE;
@@ -223,7 +224,7 @@ function make_record($id, $patient, $doctor, $rad, $type, $p_date, $t_date, $dia
 		oci_close($conn);
 		return FALSE;
 	}
-
+	//oci_commit($conn);
 	oci_free_statement($statement);
 	oci_close($conn);
 }
@@ -442,5 +443,30 @@ if(!$exec){
 oci_free_statement($statement);
 oci_close($conn);
 return $ret;
+}
+
+function insert_update_exec($sql){
+	$conn = connect();
+
+	if(($statement = oci_parse($conn, $sql)) == false){
+		$err = oci_error($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	$exec = oci_execute($statement);
+
+	if(!$exec){
+		$err = oci_error($statement);
+		oci_free_statement($statement);
+		echo htmlentities($err['message']);
+		oci_close($conn);
+		return FALSE;
+	}
+
+	oci_free_statement($statement);
+	oci_close($conn);
+	echo "Success";
 }
 ?>
